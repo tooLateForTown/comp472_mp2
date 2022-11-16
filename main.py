@@ -27,7 +27,10 @@ def show_board():
             print(col, end=' ')
         print()
     print("  -------------")
-    print(f"[{len(vehicles)} vehicles]")
+    print(f"{len(vehicles)} vehicles: ", end='')
+    for v in vehicles:
+        print(v, end=' ')
+    print()
 
 
 
@@ -37,8 +40,8 @@ def load_game(setup) -> bool:
         print("Setup needs to be at least 36 characters")
         return False
     # load Board array
-    for row in range(0,6):
-        for col in range(0,6):
+    for row in range(0, 6):
+        for col in range(0, 6):
             board[row][col] = setup[row*6+col]
     # identify the vehicles
     for row in range(0,6):
@@ -48,11 +51,18 @@ def load_game(setup) -> bool:
                 vehicle = get_vehicle(letter)
                 if vehicle is None:
                     v = Vehicle(letter)
-                    print(f"added {v}")
+                    # print(f"added {v}")
                     vehicles.append(v)
-
-
-    print(board.shape)
+    # load gas
+    if len(setup) > 36:
+        for gas in setup[36:].split(' '):
+            if len(gas) > 1:
+                v = get_vehicle(gas[0])
+                if v is None:
+                    print("Gas setup referring to vehicle not previously found.")
+                    return False
+                print(f"Gas found for {v.letter}")
+                v.gas = int(gas[1:])
     return True
 
 def get_vehicle(letter):

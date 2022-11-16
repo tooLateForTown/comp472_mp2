@@ -10,4 +10,4 @@ class Vehicle:
         self.letter = letter
 
     def __str__(self):
-        return f"Vehicle {self.letter}"
+        return f"{self.letter}({self.gas})"

@@ -141,6 +141,10 @@ class BoardState:
     def get_all_moves(self):  # SUCCESSOR FUNCTION
         moves = []
         print("Searching for all valid moves....")
+        # todo:  Check if newly generated move has already been considered (in the state space)
+        # todo: if so, don't add it again.  So must check every time before appeneding (video 1, 36:00)
+        # todo:  will need to construct graph of nodes
+
         for v in self.vehicles:
             if v.horizontal:
                 for i in range(0, self.number_free_spaces(v.x + v.length - 1, v.y, DIRECTION.RIGHT)):

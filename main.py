@@ -26,7 +26,10 @@ def main():
     print("Valid board loaded")
     initial_board.show_board()
     print(initial_board.board_config())
-    initial_board.get_all_moves()
+    first_level_moves = initial_board.get_all_moves()
+    for m in first_level_moves:
+        print(m)
+        m.board.show_board()
 
 
 if __name__ == "__main__":

@@ -3,13 +3,14 @@ import numpy as np
 import globals
 from globals import DIRECTION
 from Vehicle import Vehicle
+from Move import Move
 
 
 class BoardState:
-    vehicles = []
     valid = False
 
     def __init__(self, config):
+        self.vehicles = []
         self.board = np.full((6, 6), '.')
         self.valid = self.load_game(config)
 
@@ -64,11 +65,14 @@ class BoardState:
         return True
 
     def is_goal(self):
-        amb = self.get_vehicle('A')
-        return (amb.horizontal and amb.x == 4 and amb.y == 2) or (not amb.horizontal and amb.x == 5 and (
-                amb.y == 2 or amb.y == 3))
+        return self.vehicle_at_exit('A')
 
-    def get_vehicle(self, letter):
+    def vehicle_at_exit(self, letter):
+        v = self.get_vehicle(letter)
+        return (v.horizontal and v.get_right() >= 5) or (not v.horizontal and v.x == 5 and
+                                                         v.y <= 2 and v.get_bottom() >= 2)
+
+    def get_vehicle(self, letter) -> Vehicle:
         for v in self.vehicles:
             if v.letter == letter:
                 return v
@@ -134,23 +138,37 @@ class BoardState:
 
         return count
 
-
-
-
-
     def get_all_moves(self):
         moves = []
         print("Searching for all valid moves....")
         for v in self.vehicles:
             if v.horizontal:
-                for i in range(0, self.number_free_spaces(v.x + v.length-1, v.y, DIRECTION.RIGHT)):
-                    print(f"{v.letter} Right {i+1}")
+                for i in range(0, self.number_free_spaces(v.x + v.length - 1, v.y, DIRECTION.RIGHT)):
+                    m = Move(self, v, DIRECTION.RIGHT, i + 1)
+                    moves.append(m)
+                    # print(m)
                 for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.LEFT)):
-                    print(f"{v.letter} Left {i + 1}")
+                    m = Move(self, v, DIRECTION.LEFT, i + 1)
+                    moves.append(m)
+                    # print(m)
             if not v.horizontal:
                 for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.UP)):
-                    print(f"{v.letter} Up {i+1}")
+                    m = Move(self, v, DIRECTION.UP, i + 1)
+                    moves.append(m)
+                    # print(m)
                 for i in range(0, self.number_free_spaces(v.x, v.y + v.length - 1, DIRECTION.DOWN)):
-                    print(f"{v.letter} Down {i + 1}")
+                    m = Move(self, v, DIRECTION.DOWN, i + 1)
+                    moves.append(m)
+                    # print(m)
+        return moves
 
+    def rebuild_board_based_on_vehicles(self):
+        self.board = np.full((6, 6), '.')
+        for v in self.vehicles:
+            if v.horizontal:
+                for i in range(0, v.length):
+                    self.board[v.y][v.x+i] = v.letter
+            if not v.horizontal:
+                for i in range(0, v.length):
+                    self.board[v.y+i][v.x] = v.letter
 

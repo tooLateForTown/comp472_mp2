@@ -6,7 +6,7 @@ from Vehicle import Vehicle
 from Move import Move
 
 
-class BoardState:
+class BoardNode:
     valid = False
 
     def __init__(self, config):
@@ -51,8 +51,8 @@ class BoardState:
                             return False
 
                         self.vehicles.append(v)
-                    self.vehicles.sort(key=BoardState.letter_val)
-        # load gas
+                    self.vehicles.sort(key=BoardNode.letter_val)
+        # load gas from config string
         if len(config) > 36:
             for gas in config[36:].split(' '):
                 if len(gas) > 1:

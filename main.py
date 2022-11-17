@@ -1,7 +1,7 @@
 from array import *
 from Vehicle import Vehicle
 import numpy as np
-from BoardState import BoardState
+from BoardNode import BoardNode
 
 board = np.full((6, 6), '.')
 vehicles = []
@@ -21,7 +21,7 @@ def main():
         elif initial_config == "3":
             initial_config = "JBBCCCJDD..MJAAL.MFFKL.N..KGGN.HH..."
         print(f"Initial State: {initial_config}")
-        initial_board = BoardState(initial_config)
+        initial_board = BoardNode(initial_config)
         valid = initial_board.valid
     print("Valid board loaded")
     initial_board.show_board()

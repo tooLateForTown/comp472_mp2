@@ -1,10 +1,12 @@
+import globals
+
 class Vehicle:
     letter = '?'
     x = 0  # top-left position of first square
     y = 0  # top-left position of first square
     length = 0
     escaped = False
-    gas = 100
+    gas = globals.DEFAULT_GAS
     horizontal = False
 
     def __init__(self, letter):

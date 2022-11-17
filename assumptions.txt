@@ -1,1 +1,2 @@
 Every vehicle has length at least 2
+Ambulance is always 'A' and of length

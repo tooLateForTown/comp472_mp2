@@ -2,7 +2,7 @@ from array import *
 from Vehicle import Vehicle
 import numpy as np
 
-board = np.full((6,6), '.')
+board = np.full((6, 6), '.')
 vehicles = []
 
 def main():
@@ -10,8 +10,15 @@ def main():
     valid = False
 
     while not valid:
-        setup = input("Enter your game setup as a string: ")
-        valid = load_game(setup)
+        initial_state = input("Enter your game initial state, or (1-3 for samples): ")
+        if initial_state == "1":
+            initial_state = "BBIJ....IJCC..IAAMGDDK.MGH.KL.GHFFL."
+        elif initial_state == "2":
+            initial_state = "..I...BBI.K.GHAAKLGHDDKLG..JEEFF.J.."
+        elif initial_state == "3":
+            initial_state = "JBBCCCJDD..MJAAL.MFFKL.N..KGGN.HH..."
+        print(f"Initial State: {initial_state}")
+        valid = load_game(initial_state)
     print("Valid board loaded")
     show_board()
 
@@ -32,7 +39,8 @@ def show_board():
         print(v, end=' ')
     print()
 
-
+def letter_val(vehicle):
+    return ord(vehicle.letter)
 
 def load_game(setup) -> bool:
     setup = setup.strip()
@@ -51,8 +59,32 @@ def load_game(setup) -> bool:
                 vehicle = get_vehicle(letter)
                 if vehicle is None:
                     v = Vehicle(letter)
-                    # print(f"added {v}")
+                    v.x = col  # top left posit
+                    v.y = row
+                    # determine length and direction
+                    if row < 5 and board[row+1][col] == letter:
+                        v.horizontal = False
+                        temp_y = row
+                        while temp_y <= 5 and board[temp_y][col] == letter:
+                            v.length += 1
+                            temp_y += 1
+                    elif col < 5 and board[row][col+1] == letter:
+                        v.horizontal = True
+                        temp_x = col
+                        while temp_x <= 5 and board[row][temp_x] == letter:
+                            v.length += 1
+                            temp_x += 1
+                    else:
+                        print("Cannot determine orientation of " + letter)
+                        return False
+
                     vehicles.append(v)
+                vehicles.sort(key=letter_val)
+
+
+    # determine length orientation of each vehicle.
+
+
     # load gas
     if len(setup) > 36:
         for gas in setup[36:].split(' '):

@@ -138,7 +138,7 @@ class BoardState:
 
         return count
 
-    def get_all_moves(self):
+    def get_all_moves(self):  # SUCCESSOR FUNCTION
         moves = []
         print("Searching for all valid moves....")
         for v in self.vehicles:
@@ -146,20 +146,16 @@ class BoardState:
                 for i in range(0, self.number_free_spaces(v.x + v.length - 1, v.y, DIRECTION.RIGHT)):
                     m = Move(self, v, DIRECTION.RIGHT, i + 1)
                     moves.append(m)
-                    # print(m)
                 for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.LEFT)):
                     m = Move(self, v, DIRECTION.LEFT, i + 1)
                     moves.append(m)
-                    # print(m)
             if not v.horizontal:
                 for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.UP)):
                     m = Move(self, v, DIRECTION.UP, i + 1)
                     moves.append(m)
-                    # print(m)
                 for i in range(0, self.number_free_spaces(v.x, v.y + v.length - 1, DIRECTION.DOWN)):
                     m = Move(self, v, DIRECTION.DOWN, i + 1)
                     moves.append(m)
-                    # print(m)
         return moves
 
     def rebuild_board_based_on_vehicles(self):

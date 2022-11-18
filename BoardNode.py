@@ -13,6 +13,7 @@ class BoardNode:
         self.vehicles = []
         self.board = np.full((6, 6), '.')
         self.valid = self.load_game(config)
+        self.move_string = "Start"
 
     def load_game(self, config) -> bool:
         config = config.strip()

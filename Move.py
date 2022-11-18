@@ -18,11 +18,13 @@ class Move:
         self.vehicle = vehicle
         self.board = copy.deepcopy(board)
         self._apply_move_to_board()
+        self.move_cost = 1
 
     def __str__(self):
         return f"{self.description} : {self.board.board_config()}"
 
     def _apply_move_to_board(self):
+        self.board.move_string = self.description
         v = self.board.get_vehicle(self.vehicle.letter)
         if v.horizontal:
             if self.direction == DIRECTION.RIGHT:

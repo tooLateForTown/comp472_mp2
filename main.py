@@ -2,6 +2,7 @@ from array import *
 from Vehicle import Vehicle
 import numpy as np
 from BoardNode import BoardNode
+from SolverUCS import SolverUCS
 
 board = np.full((6, 6), '.')
 vehicles = []
@@ -25,11 +26,14 @@ def main():
         valid = initial_board.valid
     print("Valid board loaded")
     initial_board.show_board()
-    print(initial_board.board_config())
-    first_level_moves = initial_board.get_all_moves()
-    for m in first_level_moves:
-        print(m)
-        m.board.show_board()
+
+    ucs = SolverUCS(initial_board)
+    ucs.run()
+
+    # first_level_moves = initial_board.get_all_moves()
+    # for m in first_level_moves:
+    #     print(m)
+    #     m.board.show_board()
 
 
 if __name__ == "__main__":

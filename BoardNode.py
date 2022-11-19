@@ -3,7 +3,7 @@ import numpy as np
 import globals
 from globals import DIRECTION
 from Vehicle import Vehicle
-from Move import Move
+import copy
 
 
 class BoardNode:
@@ -14,6 +14,9 @@ class BoardNode:
         self.board = np.full((6, 6), '.')
         self.valid = self.load_game(config)
         self.move_string = "Start"
+        self.cost = 0
+        self.config_string ="to fill in to save computation time while iterating"
+        self.parent = None
 
     def load_game(self, config) -> bool:
         config = config.strip()
@@ -63,15 +66,18 @@ class BoardNode:
                         return False
                     print(f"Gas found for {v.letter}")
                     v.gas = int(gas[1:])
+        self.config_string = self.board_config_string()
+        self.cost = 0
+        self.parent = None
         return True
 
     def is_goal(self):
         return self.vehicle_at_exit('A')
 
     def vehicle_at_exit(self, letter):
+        # only horizontal vehicles can exit
         v = self.get_vehicle(letter)
-        return (v.horizontal and v.get_right() >= 5) or (not v.horizontal and v.x == 5 and
-                                                         v.y <= 2 and v.get_bottom() >= 2)
+        return v.horizontal and v.get_right() >= 5
 
     def get_vehicle(self, letter) -> Vehicle:
         for v in self.vehicles:
@@ -95,7 +101,10 @@ class BoardNode:
             print(v, end=' ')
         print()
 
-    def board_config(self):
+    def board_config_string(self):
+        # long string used to represent entire board state.
+        # eg:  IJBBCCIJDDL.IJAAL.EEK.L...KFF..GGHH. F0 G6
+        # note that this does NOT include cost, search history, etc...
         s = ""
         for row in self.board:
             for col in row:
@@ -139,8 +148,8 @@ class BoardNode:
 
         return count
 
-    def get_all_moves(self):  # SUCCESSOR FUNCTION
-        moves = []
+    def get_successor_boards(self):  # SUCCESSOR FUNCTION
+        children = []
         print("Searching for all valid moves....")
         # todo:  Check if newly generated move has already been considered (in the state space)
         # todo: if so, don't add it again.  So must check every time before appeneding (video 1, 36:00)
@@ -149,19 +158,46 @@ class BoardNode:
         for v in self.vehicles:
             if v.horizontal:
                 for i in range(0, self.number_free_spaces(v.x + v.length - 1, v.y, DIRECTION.RIGHT)):
-                    m = Move(self, v, DIRECTION.RIGHT, i + 1)
-                    moves.append(m)
+                    b = self.single_move_result(v, DIRECTION.RIGHT, i + 1)
+                    children.append(b)
                 for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.LEFT)):
-                    m = Move(self, v, DIRECTION.LEFT, i + 1)
-                    moves.append(m)
+                    b = self.single_move_result( v, DIRECTION.LEFT, i + 1)
+                    children.append(b)
             if not v.horizontal:
                 for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.UP)):
-                    m = Move(self, v, DIRECTION.UP, i + 1)
-                    moves.append(m)
+                    b = self.single_move_result(v, DIRECTION.UP, i + 1)
+                    children.append(b)
                 for i in range(0, self.number_free_spaces(v.x, v.y + v.length - 1, DIRECTION.DOWN)):
-                    m = Move(self, v, DIRECTION.DOWN, i + 1)
-                    moves.append(m)
-        return moves
+                    b = self.single_move_result(v, DIRECTION.DOWN, i + 1)
+                    children.append(b)
+        return children
+
+
+    def single_move_result(self, vehicle, direction, distance):
+        child_board = copy.deepcopy(self)
+        child_board.move_string = f"{vehicle.letter} {direction.name} {distance}"
+        v = child_board.get_vehicle(vehicle.letter)
+        if v.horizontal:
+            if direction == DIRECTION.RIGHT:
+                v.x += distance
+            if direction == DIRECTION.LEFT:
+                v.x -= distance
+        if not v.horizontal:
+            if direction == DIRECTION.DOWN:
+                v.y += distance
+            if direction == DIRECTION.UP:
+                v.y -= distance
+
+        # check if vehicle exited (except the ambulance)
+        if v.letter != 'A':
+            if child_board.vehicle_at_exit(v.letter):
+                print(f"EXITED: {v}")
+                child_board.vehicles.remove(v)
+        # rebuild board based on new config
+        child_board.rebuild_board_based_on_vehicles()
+        child_board.config_string = child_board.board_config_string()  # only calculate config string once
+        return child_board
+
 
     def rebuild_board_based_on_vehicles(self):
         self.board = np.full((6, 6), '.')

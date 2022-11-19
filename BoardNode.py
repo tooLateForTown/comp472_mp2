@@ -13,11 +13,17 @@ class BoardNode:
         self.vehicles = []
         self.board = np.full((6, 6), '.')
         self.valid = self.load_game(config)
-        self.move_string = "Start"
         self.cost = 0
         self.config_string ="to fill in to save computation time while iterating"
         self.parent = None
         self.depth = 0
+        self.runtime = 0
+        # move specific info
+        self.move_string = "Start"
+        self.vehicle_moved = '?'
+        self.vehicle_gas_after_move = 0
+        self.vehicle_direction = None
+        self.vehicle_distance = 0
 
     def load_game(self, config) -> bool:
         config = config.strip()
@@ -102,8 +108,15 @@ class BoardNode:
             for v in self.vehicles:
                 print(v, end=' ')
         print()
+    def string_of_board(self):
+        s = ""
+        for row in self.board:
+            for col in row:
+                s += col
+            s += "\n"
+        return s
 
-    def board_config_string(self):
+    def board_config_string(self, include_gas=False):
         # long string used to represent entire board state.
         # eg:  IJBBCCIJDDL.IJAAL.EEK.L...KFF..GGHH. F0 G6
         # note that this does NOT include cost, search history, etc...
@@ -112,9 +125,10 @@ class BoardNode:
             for col in row:
                 s += col
         # gas values
-        for v in self.vehicles:
-            if v.gas != globals.DEFAULT_GAS:
-                s += f" {v.letter}{v.gas}"
+        if include_gas:
+            for v in self.vehicles:
+                if v.gas != globals.DEFAULT_GAS:
+                    s += f" {v.letter}{v.gas}"
         return s
 
     @staticmethod
@@ -127,22 +141,22 @@ class BoardNode:
         if x < 0 or x > 5 or y < 0 or y > 5:
             return 0
 
-        if direction == DIRECTION.UP:
+        if direction == DIRECTION.up:
             y -= 1
             while y >= 0 and self.board[y][x] == '.':
                 count += 1
                 y -= 1
-        if direction == DIRECTION.DOWN:
+        if direction == DIRECTION.down:
             y += 1
             while y <= 5 and self.board[y][x] == '.':
                 count += 1
                 y += 1
-        if direction == DIRECTION.RIGHT:
+        if direction == DIRECTION.right:
             x += 1
             while x <= 5 and self.board[y][x] == '.':
                 count += 1
                 x += 1
-        if direction == DIRECTION.LEFT:
+        if direction == DIRECTION.left:
             x -= 1
             while x >= 0 and self.board[y][x] == '.':
                 count += 1
@@ -153,41 +167,45 @@ class BoardNode:
     def get_successor_boards(self):  # SUCCESSOR FUNCTION
         children = []
         print("Searching for all valid moves....")
-        # todo:  Check if newly generated move has already been considered (in the state space)
-        # todo: if so, don't add it again.  So must check every time before appeneding (video 1, 36:00)
-        # todo:  will need to construct graph of nodes
-
         for v in self.vehicles:
             if v.horizontal:
-                for i in range(0, self.number_free_spaces(v.x + v.length - 1, v.y, DIRECTION.RIGHT)):
-                    b = self.single_move_result(v, DIRECTION.RIGHT, i + 1)
-                    children.append(b)
-                for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.LEFT)):
-                    b = self.single_move_result( v, DIRECTION.LEFT, i + 1)
-                    children.append(b)
+                for i in range(0, self.number_free_spaces(v.x + v.length - 1, v.y, DIRECTION.right)):
+                    b = self.single_move_result(v, DIRECTION.right, i + 1)
+                    if b.vehicle_gas_after_move >=0:
+                        children.append(b)
+                for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.left)):
+                    b = self.single_move_result(v, DIRECTION.left, i + 1)
+                    if b.vehicle_gas_after_move >= 0:
+                        children.append(b)
             if not v.horizontal:
-                for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.UP)):
-                    b = self.single_move_result(v, DIRECTION.UP, i + 1)
-                    children.append(b)
-                for i in range(0, self.number_free_spaces(v.x, v.y + v.length - 1, DIRECTION.DOWN)):
-                    b = self.single_move_result(v, DIRECTION.DOWN, i + 1)
-                    children.append(b)
+                for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.up)):
+                    b = self.single_move_result(v, DIRECTION.up, i + 1)
+                    if b.vehicle_gas_after_move >= 0:
+                        children.append(b)
+                for i in range(0, self.number_free_spaces(v.x, v.y + v.length - 1, DIRECTION.down)):
+                    b = self.single_move_result(v, DIRECTION.down, i + 1)
+                    if b.vehicle_gas_after_move >= 0:
+                        children.append(b)
         return children
 
 
     def single_move_result(self, vehicle, direction, distance):
-        child_board = copy.deepcopy(self)
-
+        child_board = copy.deepcopy(self)  # todo consider throwing away vechicles before deep-cloning to avoid filling memory
+        child_board.vehicle_moved = vehicle.letter
+        child_board.vehicle_direction = direction
+        child_board.vehicle_distance = distance
         v = child_board.get_vehicle(vehicle.letter)
+        v.gas -= distance
+        child_board.vehicle_gas_after_move = v.gas
         if v.horizontal:
-            if direction == DIRECTION.RIGHT:
+            if direction == DIRECTION.right:
                 v.x += distance
-            if direction == DIRECTION.LEFT:
+            if direction == DIRECTION.left:
                 v.x -= distance
         if not v.horizontal:
-            if direction == DIRECTION.DOWN:
+            if direction == DIRECTION.down:
                 v.y += distance
-            if direction == DIRECTION.UP:
+            if direction == DIRECTION.up:
                 v.y -= distance
 
         # check if vehicle exited (except the ambulance)
@@ -216,13 +234,21 @@ class BoardNode:
                 for i in range(0, v.length):
                     self.board[v.y+i][v.x] = v.letter
     @staticmethod
-    def move_path_to_parent(board, path="", print_boards=False):
-        if board.parent is None:
-            if print_boards:
-                board.show_board(show_vehicles=False)
-            return path
-        else:
-            if print_boards:
-                board.show_board(show_vehicles=False)
-            return BoardNode.move_path_to_parent(board.parent, board.move_string + ", " + path)
+    def path_to_parent(end_board):
+        path = []
+        if end_board.parent is None:
+            # we bizarrely started at the parent.  return nothing
+            return []
+        path.append(end_board)
+        parent = end_board.parent
+        while parent.parent is not None:
+            path.insert(0, parent)
+            parent = parent.parent
+        return path
+
+    def string_for_solution(self):
+        return f"{self.vehicle_moved} {str(self.vehicle_direction.name).rjust(5)} {self.vehicle_distance} {str(self.vehicle_gas_after_move).rjust(6)} {self.config_string}"
+
+
+
 

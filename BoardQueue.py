@@ -7,7 +7,7 @@ class BoardQueue:
         self.nodes = []   # of type BoardNode
 
     def sort_by_cost(self):  # for UCS
-        self.nodes.sort(key=BoardNode.cost)
+        self.nodes.sort(key=lambda x: x.cost)
 
     def get_board(self, config_string):
         # returns board if found.  Useful for removing for UCS
@@ -28,17 +28,17 @@ class BoardQueue:
     def is_empty(self):
         return len(self.nodes) == 0
 
-    def remove_board(self, board, only_remove_higher_cost_variant = False):
+    def remove_board(self, board):
+        # removes all copies of board with same config_string
         to_remove = []
         for b in self.nodes:
             if b.config_string == board.config_string:
-                if only_remove_higher_cost_variant:
-                    if b.cost > board.cost:
-                        to_remove.append(b)
-                else:
-                    to_remove.append(b)
+                to_remove.append(b)
         for b in to_remove:
             self.nodes.remove(b)
+
+
+
 
 
 

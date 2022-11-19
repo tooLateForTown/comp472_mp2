@@ -17,6 +17,7 @@ class BoardNode:
         self.cost = 0
         self.config_string ="to fill in to save computation time while iterating"
         self.parent = None
+        self.depth = 0
 
     def load_game(self, config) -> bool:
         config = config.strip()
@@ -85,7 +86,7 @@ class BoardNode:
                 return v
         return None
 
-    def show_board(self):
+    def show_board(self, show_vehicles=True):
         print('   a b c d e f')
         print("  -------------")
         count = 1
@@ -97,8 +98,9 @@ class BoardNode:
             print()
         print("  -------------")
         print(f"{len(self.vehicles)} vehicles: ", end='')
-        for v in self.vehicles:
-            print(v, end=' ')
+        if show_vehicles:
+            for v in self.vehicles:
+                print(v, end=' ')
         print()
 
     def board_config_string(self):
@@ -175,7 +177,7 @@ class BoardNode:
 
     def single_move_result(self, vehicle, direction, distance):
         child_board = copy.deepcopy(self)
-        child_board.move_string = f"{vehicle.letter} {direction.name} {distance}"
+
         v = child_board.get_vehicle(vehicle.letter)
         if v.horizontal:
             if direction == DIRECTION.RIGHT:
@@ -193,9 +195,14 @@ class BoardNode:
             if child_board.vehicle_at_exit(v.letter):
                 print(f"EXITED: {v}")
                 child_board.vehicles.remove(v)
-        # rebuild board based on new config
-        child_board.rebuild_board_based_on_vehicles()
+
+        child_board.rebuild_board_based_on_vehicles()# rebuild board based on new config
+        # add child-specific values
+        child_board.move_string = f"{vehicle.letter} {direction.name} {distance}"
         child_board.config_string = child_board.board_config_string()  # only calculate config string once
+        child_board.cost += 1  # todo check that this is right
+        child_board.depth += 1
+        child_board.parent = self
         return child_board
 
 
@@ -208,4 +215,14 @@ class BoardNode:
             if not v.horizontal:
                 for i in range(0, v.length):
                     self.board[v.y+i][v.x] = v.letter
+    @staticmethod
+    def move_path_to_parent(board, path="", print_boards=False):
+        if board.parent is None:
+            if print_boards:
+                board.show_board(show_vehicles=False)
+            return path
+        else:
+            if print_boards:
+                board.show_board(show_vehicles=False)
+            return BoardNode.move_path_to_parent(board.parent, board.move_string + ", " + path)
 

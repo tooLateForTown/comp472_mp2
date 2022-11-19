@@ -166,7 +166,7 @@ class BoardNode:
 
     def get_successor_boards(self):  # SUCCESSOR FUNCTION
         children = []
-        print("Searching for all valid moves....")
+        # print("Searching for all valid moves....")
         for v in self.vehicles:
             if v.horizontal:
                 for i in range(0, self.number_free_spaces(v.x + v.length - 1, v.y, DIRECTION.right)):
@@ -211,7 +211,7 @@ class BoardNode:
         # check if vehicle exited (except the ambulance)
         if v.letter != 'A':
             if child_board.vehicle_at_exit(v.letter):
-                print(f"EXITED: {v}")
+                # print(f"EXITED: {v}")
                 child_board.vehicles.remove(v)
 
         child_board.rebuild_board_based_on_vehicles()# rebuild board based on new config

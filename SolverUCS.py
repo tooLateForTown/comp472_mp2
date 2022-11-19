@@ -1,21 +1,25 @@
 from BoardNode import BoardNode
 from BoardQueue import BoardQueue
+from datetime import datetime
 
-class SolverUCS:
+from GenericSolver import GenericSolver
 
-    def __init__(self, initial_board):
-        self.initial_board = initial_board
-        self.solved_board = None
-        self.open = BoardQueue()
-        self.closed = BoardQueue()
-        self.solved = False
-        self.finished = False
-        self.solution_path = None
-        self.search_path = []
+
+class SolverUCS(GenericSolver):
+    # Inherits from GenericSolver
 
     def run(self):
+
         self.open.add(self.initial_board)
+        start_time = datetime.now()
         self._loop_until_end()
+        self.run_time = (datetime.now() - start_time).total_seconds()
+        print("--- SEARCH PATH ---")
+        for b in self.search_path:
+            print(b.move_string)
+
+        print("-- FINAL SOLUTION-- ")
+        print(self.generate_final_solution_string_for_output())
 
     def _loop_until_end(self):
         while not self.finished:
@@ -31,16 +35,6 @@ class SolverUCS:
                     self.solved_board = first_open
                 if not success:
                     self._add_children_to_open(first_open)
-        print("--- SEARCH PATH ---")
-        for b in self.search_path:
-            print(b.move_string)
-
-        print("-- FINAL SOLUTION-- ")
-        print(self.generate_final_solution_string_for_output())
-
-
-
-        print("End of program")
 
     def _evaluate_board(self, board):
         if board.is_goal():
@@ -60,7 +54,7 @@ class SolverUCS:
         children = board.get_successor_boards()
         for c in children:
             add_to_open = True
-            print(f"{c.move_string} : {c.config_string}")
+            # print(f"{c.move_string} : {c.config_string}")
             duplicate_in_open = self.open.get_board(c.config_string)
             # UCS specific check
             if duplicate_in_open is not None:
@@ -75,20 +69,7 @@ class SolverUCS:
                 self.open.add(c)
         self.open.sort_by_cost()
 
-    def generate_final_solution_string_for_output(self):
-        if self.solved:
-            s = f"Initial board configuration: {self.initial_board.board_config_string(include_gas=True)}\n"
-            s += f"\n{self.initial_board.string_of_board()}"
-            s += "Car fuel available: TO COME \n"
-            s += "\nRuntime: TO COME"
-            s += f"\nSearch path length: {len(self.search_path)} states"
-            s += f"\nSolution path length: {len(self.solution_path)} states"
-            for b in self.solution_path:
-                s += f"\n{b.string_for_solution()}"
-            s += f"\n\n{self.solved_board.string_of_board()}"
-        else:
-            s = "no solution"
-        return s
+
 
 
 

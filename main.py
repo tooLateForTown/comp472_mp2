@@ -7,6 +7,9 @@ from SolverUCS import SolverUCS
 board = np.full((6, 6), '.')
 vehicles = []
 
+# BBIJ....IJCC..IAAMGDDK.MGH.KL.GHFFL.
+# BBB..MCCDD.MAAKL.MJ.KLEEJ.GG..JHHHII B4 J0
+
 
 def main():
     print("MP2: Rush-Hour")

@@ -9,14 +9,14 @@ import copy
 class BoardNode:
     valid = False
 
-    def __init__(self, config):
+    def __init__(self, config):  # eg: BBIJ....IJCC..IAAMGDDK.MGH.KL.GHFFL.
         self.vehicles = []
         self.board = np.full((6, 6), '.')
         self.valid = self.load_game(config)
-        self.cost = 0
+        self.cost = 0  # for UCS cost evaluation
         self.config_string ="to fill in to save computation time while iterating"
         self.parent = None
-        self.depth = 0
+        self.depth = 0  # graph node depth
         self.runtime = 0
         # move specific info
         self.move_string = "Start"
@@ -84,7 +84,7 @@ class BoardNode:
     def vehicle_at_exit(self, letter):
         # only horizontal vehicles can exit
         v = self.get_vehicle(letter)
-        return v.horizontal and v.get_right() >= 5
+        return v.horizontal and v.get_right() >= 5 and v.y == 2
 
     def get_vehicle(self, letter) -> Vehicle:
         for v in self.vehicles:

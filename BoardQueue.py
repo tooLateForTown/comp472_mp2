@@ -37,6 +37,9 @@ class BoardQueue:
         for b in to_remove:
             self.nodes.remove(b)
 
+    def sort_by_heuristic(self, heuristic):
+        self.nodes.sort(key=lambda x: x.heuristic(heuristic))
+    
 
 
 

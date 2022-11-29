@@ -86,6 +86,12 @@ class BoardNode:
         v = self.get_vehicle(letter)
         return v.horizontal and v.get_right() >= 5
 
+    def vehicle_blocking_amubalnce(self, letter):
+        ambulance = self.get_vehicle('A')
+        v = self.get_vehicle(letter)
+        # if v is to the right of ambulance, it is blocking it from exiting
+        return v.x > ambulance.x
+
     def get_vehicle(self, letter) -> Vehicle:
         for v in self.vehicles:
             if v.letter == letter:
@@ -218,6 +224,7 @@ class BoardNode:
         # add child-specific values
         child_board.move_string = f"{vehicle.letter} {direction.name} {distance}"
         child_board.config_string = child_board.board_config_string()  # only calculate config string once
+        # TODO: Calculate cost depending on algorithm, cost and depth should be different!
         child_board.cost += 1  # todo check that this is right
         child_board.depth += 1
         child_board.parent = self
@@ -249,6 +256,14 @@ class BoardNode:
     def string_for_solution(self):
         return f"{self.vehicle_moved} {str(self.vehicle_direction.name).rjust(5)} {self.vehicle_distance} {str(self.vehicle_gas_after_move).rjust(6)} {self.config_string}"
 
+    def number_of_blocking_vehciles(self):
+        # returns the number of vehicles that are blocking the ambulance
+        count = 0
+        for v in self.vehicles:
+            if v.letter != 'A':
+                if self.vehicle_blocking_amubalnce(v.letter):
+                    count += 1
+        return count
 
 
 

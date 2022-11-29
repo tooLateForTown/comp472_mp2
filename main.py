@@ -3,6 +3,7 @@ from Vehicle import Vehicle
 import numpy as np
 from BoardNode import BoardNode
 from SolverUCS import SolverUCS
+from SolverA import SolverA
 
 board = np.full((6, 6), '.')
 vehicles = []
@@ -27,8 +28,19 @@ def main():
     print("Valid board loaded")
     initial_board.show_board()
 
-    ucs = SolverUCS(initial_board)
-    ucs.run()
+    heuristic = input("Enter your heuristic (1-3): 1: number of blocking vehicles, 2: number of blocked positions, 3: heuristic * alpha: ")
+    if heuristic == "1":
+        heuristic = "number_of_blocking_vehciles"
+    elif heuristic == "2":
+        heuristic = "number_of_blocked_positions"
+    elif heuristic == "3":
+        heuristic = "heuristic_multiplied"
+        alpha = input("Enter your alpha: ")
+    print(f"Heuristic: {heuristic}")
+    #ucs = SolverUCS(initial_board)
+    #ucs.run()
+    a = SolverA(initial_board, heuristic, alpha if heuristic == "heuristic_multiplied" else None)
+    a.run()
 
     # first_level_moves = initial_board.get_all_moves()
     # for m in first_level_moves:

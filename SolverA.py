@@ -8,8 +8,12 @@ from GenericSolver import GenericSolver
 class SolverA(GenericSolver):
     # Inherits from GenericSolver
 
-    def run(self):
+    def __init__(self, initial_board, heuristic, alpha=1):
+        super().__init__(initial_board)
+        self.heuristic = heuristic
+        self.alpha = alpha
 
+    def run(self):
         self.open.add(self.initial_board)
         start_time = datetime.now()
         self._loop_until_end()
@@ -22,21 +26,20 @@ class SolverA(GenericSolver):
         print(self.generate_final_solution_string_for_output())
 
     # A* search algorithm on the board
-    def _loop_until_end(self, heuristic):
+    def _loop_until_end(self):
         while not self.finished:
             if self.open.is_empty():
                 print("Open is empty. No solution found")
                 self.finished = True
             else:
-                # TODO: implement A* search. first_open should be the board with the lowest cost + heuristic
-                #first_open = self.open.pop_first()
+                first_open = self.open.pop_first()
                 self.search_path.append(first_open)
                 success = self._evaluate_board(first_open)
                 if success:
                     self.solution_path = BoardNode.path_to_parent(first_open)
                     self.solved_board = first_open
                 if not success:
-                    self._add_children_to_open(first_open)
+                    self._add_children_to_open(first_open, self.heuristic)
 
     def _evaluate_board(self, board):
         if board.is_goal():
@@ -51,7 +54,7 @@ class SolverA(GenericSolver):
             return False
 
 
-    def _add_children_to_open(self, board):
+    def _add_children_to_open(self, board, heuristic):
         # add successor children on board to open
         children = board.get_successor_boards()
         for c in children:
@@ -69,7 +72,7 @@ class SolverA(GenericSolver):
                 add_to_open = False
             if add_to_open:
                 self.open.add(c)
-        self.open.sort_by_cost()
+        self.open.sort_by_heuristic(heuristic)
 
 
 

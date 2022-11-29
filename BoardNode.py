@@ -256,6 +256,7 @@ class BoardNode:
     def string_for_solution(self):
         return f"{self.vehicle_moved} {str(self.vehicle_direction.name).rjust(5)} {self.vehicle_distance} {str(self.vehicle_gas_after_move).rjust(6)} {self.config_string}"
 
+    # Hueristic functions
     def number_of_blocking_vehciles(self):
         # returns the number of vehicles that are blocking the ambulance
         count = 0
@@ -264,6 +265,18 @@ class BoardNode:
                 if self.vehicle_blocking_amubalnce(v.letter):
                     count += 1
         return count
+    
+    def number_of_blocked_positions(self):
+        # returns the number of positions that are non-empty on the board
+        count = 0
+        for y in range(0, 6):
+            for x in range(0, 6):
+                if self.board[y][x] != '.':
+                    count += 1
+        return count
+
+    def hueristic_multiplied(self, alpha):
+        return self.number_of_blocking_vehciles() * alpha
 
 
 

@@ -6,7 +6,7 @@ from globals import ALGORITHM
 
 class Solver:
 
-    def __init__(self, initial_board, heuristic, algorithm, lambda_val=5 ):
+    def __init__(self, initial_board, heuristic, algorithm,  verbose=False, lambda_val=5):
         self.initial_board = initial_board
         self.solved_board = None
         self.open = BoardQueue()
@@ -19,18 +19,22 @@ class Solver:
         self.heuristic = heuristic
         self.lambda_val = 5
         self.algorithm = algorithm
+        self.verbose = verbose
 
     def run(self):
         self.open.add(self.initial_board)
         start_time = datetime.now()
         self._loop_until_end()
         self.run_time = (datetime.now() - start_time).total_seconds()
-        print("--- SEARCH PATH ---")
-        for b in self.search_path:
-            print(b.move_string)
+        if (self.verbose):
+            print("--- SEARCH PATH ---")
+            for b in self.search_path:
+                print(b.move_string)
 
-        print("-- FINAL SOLUTION-- ")
-        print(self.generate_final_solution_string_for_output())
+            print("-- FINAL SOLUTION-- ")
+            print(self.generate_final_solution_string_for_output())
+        # output result to screen
+        print(f"solution_steps={len(self.solution_path)}, search_path={len(self.search_path)}, time={'{:.2f}'.format(self.run_time)} secs")
 
     def _loop_until_end(self):
         while not self.finished:
@@ -51,7 +55,7 @@ class Solver:
         if board.is_goal():
             self.solved = True
             self.finished = True
-            print("Board solved!")
+            # print("Board solved!")
             return True
         else:
             # remove from open list and add to closed

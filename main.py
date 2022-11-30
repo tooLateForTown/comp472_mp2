@@ -1,12 +1,10 @@
-from array import *
-from Vehicle import Vehicle
+#todo add names and id's
 import numpy as np
 from BoardNode import BoardNode
-# from SolverUCS import SolverUCS
-# from SolverGBFS import SolverGBFS
-# from SolverA import SolverA
+from datetime import datetime
 from Solver import Solver
 from globals import HEURISTIC, ALGORITHM
+import InputManager
 
 board = np.full((6, 6), '.')
 vehicles = []
@@ -16,9 +14,9 @@ vehicles = []
 
 
 # ***********************
-RUN_ALL = True  
+RUN_ALL = True
 LAMBDA = 5
-VERBOSE = True
+VERBOSE = False
 # or individually if RUN_ALL = False
 RUN_UCS = False
 RUN_GBFS_H1 = False
@@ -29,26 +27,35 @@ RUN_A_H1 = False
 RUN_A_H2 = False
 RUN_A_H3 = False
 RUN_A_H4 = False
+
+
 # ***********************
 
 
 def main():
     print("MP2: Rush-Hour")
-    valid = False
-    initial_board = None
+    puzzles = InputManager.choose_input_file()
+    if len(puzzles) == 0:
+        print(f"No Puzzles found")
+        print(f"Bye")
+        exit()
+    print(f"{len(puzzles)} puzzles found in file.")
 
-    while not valid:
-        initial_config = input("Enter your game initial state, or (1-3 for samples): ")
-        if initial_config == "1":
-            initial_config = "BBIJ....IJCC..IAAMGDDK.MGH.KL.GHFFL."
-        elif initial_config == "2":
-            initial_config = "..I...BBI.K.GHAAKLGHDDKLG..JEEFF.J.."
-        elif initial_config == "3":
-            initial_config = "JBBCCCJDD..MJAAL.MFFKL.N..KGGN.HH..."
-        print(f"Initial State: {initial_config}")
-        initial_board = BoardNode(initial_config)
-        valid = initial_board.valid
-    print("Valid board loaded")
+    counter = 0
+    start_time = datetime.now()
+    for puzzle in puzzles:
+        counter += 1
+        print("\n-----------------------------------------------------------")
+        print(f" Puzzle {counter} : {puzzle}")
+        print("-----------------------------------------------------------")
+        run_single_puzzle(puzzle)
+    run_time = (datetime.now() - start_time).total_seconds()
+    print(f'\nTotal Runtime: {"{:.2f}".format(run_time)} seconds')
+    print("\n*** The End! *** ")
+
+
+def run_single_puzzle(puzzle):
+    initial_board = BoardNode(puzzle)
     initial_board.show_board()
 
     #reset content of all txt files
@@ -83,7 +90,7 @@ def main():
         Solver(initial_board, HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS, ALGORITHM.A, VERBOSE).run()
     if RUN_A_H3 or RUN_ALL:
         print(f"\n**** RUNNING A/A* on H3 ******")
-        Solver(initial_board, HEURISTIC.H3_H1_TIMES_LAMBDA, ALGORITHM.A,VERBOSE, LAMBDA).run()
+        Solver(initial_board, HEURISTIC.H3_H1_TIMES_LAMBDA, ALGORITHM.A, VERBOSE, LAMBDA).run()
     if RUN_A_H4 or RUN_ALL:
         print(f"\n**** RUNNING A/A* on H4 ******")
         Solver(initial_board, HEURISTIC.H4_CUSTOM, ALGORITHM.A, VERBOSE).run()

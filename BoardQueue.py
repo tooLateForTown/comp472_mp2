@@ -37,6 +37,17 @@ class BoardQueue:
         for b in to_remove:
             self.nodes.remove(b)
 
+    def sort_by_heuristic(self, heuristic):
+        # heuristic map
+        # 1: number of blocking vehicles
+        heuristic_dict = {'number_of_blocking_vehciles': 1, 'number_of_blocked_positions': 2, 'blocking_vehicles_and_distance_and_gas': 3}
+
+        # Sort by cost + heuristic
+        if heuristic_dict[heuristic] == 1:
+            self.nodes.sort(key=lambda x: x.cost + x.number_of_blocking_vehciles())
+        elif heuristic_dict[heuristic] == 2:
+            self.nodes.sort(key=lambda x: x.cost + x.number_of_blocked_positions())
+    
 
 
 

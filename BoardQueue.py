@@ -1,5 +1,5 @@
 from BoardNode import BoardNode
-from globals import HEURISTIC
+from globals import HEURISTIC, ALGORITHM
 
 
 class BoardQueue:
@@ -38,13 +38,29 @@ class BoardQueue:
         for b in to_remove:
             self.nodes.remove(b)
 
-    def sort_by_heuristic(self, heuristic):
-        if heuristic == HEURISTIC.H0_PURELY_COST_FOR_UCS:
+    def sort_by_heuristic(self, heuristic, algorithm, lambda_val):
+        if algorithm == ALGORITHM.UCS:
             self.nodes.sort(key=lambda x: x.cost)
-        if heuristic == HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES:
-            self.nodes.sort(key=lambda x: x.cost + x.number_of_blocking_vehicles())
-        if heuristic == HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS:
-            self.nodes.sort(key=lambda x: x.cost + x.number_of_blocked_positions())
+        elif algorithm == ALGORITHM.GBFS:
+            if heuristic == HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES:
+                self.nodes.sort(key=lambda x: x.number_of_blocking_vehicles())
+            if heuristic == HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS:
+                self.nodes.sort(key=lambda x: x.number_of_blocked_positions())
+            if heuristic == HEURISTIC.H3_H1_TIMES_LAMBDA:
+                self.nodes.sort(key=lambda x: x.number_of_blocking_vehicles() * lambda_val)
+            # if heuristic == HEURISTIC.H4_CUSTOM: #todo turn this back omn
+            #     self.nodes.sort(key=lambda x: x.custom_heuristic)
+        elif algorithm == ALGORITHM.A:
+            if heuristic == HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES:
+                self.nodes.sort(key=lambda x: x.cost + x.number_of_blocking_vehicles())
+            if heuristic == HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS:
+                self.nodes.sort(key=lambda x: x.cost + x.number_of_blocked_positions())
+            if heuristic == HEURISTIC.H3_H1_TIMES_LAMBDA:
+                self.nodes.sort(key=lambda x: (x.cost + x.number_of_blocking_vehicles()) * lambda_val)
+            # if heuristic == HEURISTIC.H4_CUSTOM:  # todo turn this on
+            #     self.nodes.sort(key=lambda x: x.cost + x.custom_heuristic)
+
+
     
 
 

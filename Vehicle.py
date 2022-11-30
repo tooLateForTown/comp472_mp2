@@ -18,6 +18,7 @@ class Vehicle:
         return f"{self.letter}=[gas={self.gas} {top_left} {orientation}={self.length}]"
 
     def get_right(self):
+        # returns right-most X position (zero based) of vehicle
         if self.horizontal:
             return self.x + self.length - 1
         else:

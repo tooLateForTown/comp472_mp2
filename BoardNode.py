@@ -13,8 +13,8 @@ class BoardNode:
         self.vehicles = []
         self.board = np.full((6, 6), '.')
         self.valid = self.load_game(config)
-        self.cost = 0  # for UCS cost evaluation
-        self.config_string ="to fill in to save computation time while iterating"
+        self.cost = 0
+        self.config_string = "to fill in to save computation time while iterating"
         self.parent = None
         self.depth = 0  # graph node depth
         self.runtime = 0
@@ -114,6 +114,7 @@ class BoardNode:
             for v in self.vehicles:
                 print(v, end=' ')
         print()
+
     def string_of_board(self):
         s = ""
         for row in self.board:
@@ -177,7 +178,7 @@ class BoardNode:
             if v.horizontal:
                 for i in range(0, self.number_free_spaces(v.x + v.length - 1, v.y, DIRECTION.right)):
                     b = self.single_move_result(v, DIRECTION.right, i + 1)
-                    if b.vehicle_gas_after_move >=0:
+                    if b.vehicle_gas_after_move >= 0:
                         children.append(b)
                 for i in range(0, self.number_free_spaces(v.x, v.y, DIRECTION.left)):
                     b = self.single_move_result(v, DIRECTION.left, i + 1)
@@ -194,9 +195,9 @@ class BoardNode:
                         children.append(b)
         return children
 
-
     def single_move_result(self, vehicle, direction, distance):
-        child_board = copy.deepcopy(self)  # todo consider throwing away vechicles before deep-cloning to avoid filling memory
+        child_board = copy.deepcopy(
+            self)  # todo consider throwing away vechicles before deep-cloning to avoid filling memory
         child_board.vehicle_moved = vehicle.letter
         child_board.vehicle_direction = direction
         child_board.vehicle_distance = distance
@@ -220,7 +221,7 @@ class BoardNode:
                 # print(f"EXITED: {v}")
                 child_board.vehicles.remove(v)
 
-        child_board.rebuild_board_based_on_vehicles()# rebuild board based on new config
+        child_board.rebuild_board_based_on_vehicles()  # rebuild board based on new config
         # add child-specific values
         child_board.move_string = f"{vehicle.letter} {direction.name} {distance}"
         child_board.config_string = child_board.board_config_string()  # only calculate config string once
@@ -230,16 +231,16 @@ class BoardNode:
         child_board.parent = self
         return child_board
 
-
     def rebuild_board_based_on_vehicles(self):
         self.board = np.full((6, 6), '.')
         for v in self.vehicles:
             if v.horizontal:
                 for i in range(0, v.length):
-                    self.board[v.y][v.x+i] = v.letter
+                    self.board[v.y][v.x + i] = v.letter
             if not v.horizontal:
                 for i in range(0, v.length):
-                    self.board[v.y+i][v.x] = v.letter
+                    self.board[v.y + i][v.x] = v.letter
+
     @staticmethod
     def path_to_parent(end_board):
         path = []
@@ -265,18 +266,16 @@ class BoardNode:
                 if self.vehicle_blocking_ambulance(v.letter):
                     count += 1
         return count
-    
+
     def number_of_blocked_positions(self):
-        # returns the number of positions that are non-empty on the board
+        # returns the number of positions that are non-empty between the ambulance and the exit on row 2
         count = 0
-        for y in range(0, 6):
-            for x in range(0, 6):
-                if self.board[y][x] != '.':
-                    count += 1
+        amb = self.get_vehicle('A')
+        for x in range(amb.get_right() + 1, 6):
+            if self.board[2][x] != '.':
+                count += 1
         return count
 
-    def hueristic_multiplied(self, alpha):
-        return self.number_of_blocking_vehicles() * alpha
-
-
+    def custom_heuristic(self):
+        return 1
 

@@ -16,7 +16,7 @@ vehicles = []
 
 
 # ***********************
-RUN_ALL = False
+RUN_ALL = True  
 LAMBDA = 5
 VERBOSE = True
 # or individually if RUN_ALL = False
@@ -26,9 +26,9 @@ RUN_GBFS_H2 = False
 RUN_GBFS_H3 = False
 RUN_GBFS_H4 = False
 RUN_A_H1 = False
-RUN_A_H2 = True
+RUN_A_H2 = False
 RUN_A_H3 = False
-RUN_A_H4 = True
+RUN_A_H4 = False
 # ***********************
 
 
@@ -50,6 +50,15 @@ def main():
         valid = initial_board.valid
     print("Valid board loaded")
     initial_board.show_board()
+
+    #reset content of all txt files
+    import os
+
+    directory = 'Text Files'
+    for filename in os.listdir(directory):
+        fn = os.path.join(directory, filename)
+        f = open(fn, "w")
+        f.close()
 
     if RUN_UCS or RUN_ALL:
         print(f"\n**** RUNNING UCS ******")
@@ -78,7 +87,6 @@ def main():
     if RUN_A_H4 or RUN_ALL:
         print(f"\n**** RUNNING A/A* on H4 ******")
         Solver(initial_board, HEURISTIC.H4_CUSTOM, ALGORITHM.A, VERBOSE).run()
-
 
 if __name__ == "__main__":
     main()

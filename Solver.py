@@ -30,6 +30,7 @@ class Solver:
             print("--- SEARCH PATH ---")
             for b in self.search_path:
                 print(b.string_for_searchpath())
+                self.add_to_search_file(b.string_for_searchpath())
             print("-- FINAL SOLUTION-- ")
             print(self.generate_final_solution_string_for_output())
         # output result to screen
@@ -80,6 +81,10 @@ class Solver:
             s += f"\n\n{self.solved_board.string_of_board()}"
         else:
             s = "no solution"
+        
+        #output to file
+        self.add_to_solution_file(s)
+        
         return s
 
     def _add_children_to_open(self, board):
@@ -112,3 +117,26 @@ class Solver:
 
                 self.open.add(c)
         self.open.sort_by_heuristic(self.heuristic, self.algorithm, self.lambda_val)
+
+
+    def add_to_solution_file(self, s):
+        
+        if self.algorithm.name.lower() == "ucs":
+            f = open('Text Files/' + self.algorithm.name.lower() + "-sol-" + "NUMBER HERE" + ".txt", "a")
+            f.write(s + "\n")
+            f.close()
+        else:
+            f = open('Text Files/' + self.algorithm.name.lower() + "-" + self.heuristic.name[0:2].lower() + "-sol-" + "NUMBER HERE" + ".txt", "a")
+            f.write(s + "\n")
+            f.close()
+
+    def add_to_search_file(self, b):
+
+        if self.algorithm.name.lower() == "ucs":
+            f = open('Text Files/' + self.algorithm.name.lower() + "-search-" + "NUMBER HERE" + ".txt", "a")
+            f.write(b + "\n")
+            f.close()
+        else:
+            f = open('Text Files/' + self.algorithm.name.lower() + "-" + self.heuristic.name[0:2].lower() + "-search-" + "NUMBER HERE" + ".txt", "a")
+            f.write(b + "\n")
+            f.close()

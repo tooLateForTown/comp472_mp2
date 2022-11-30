@@ -291,6 +291,8 @@ class BoardNode:
                 count += 1
         return count
 
-    def custom_heuristic(self):
-        return 1
+    def manhattan_distance(self):
+        # returns the distance between vehicle A and the exit. The exit is at (5,2)
+        amb = self.get_vehicle('A')
+        return abs(amb.x - 5) + abs(amb.y - 2)
 

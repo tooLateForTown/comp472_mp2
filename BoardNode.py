@@ -256,9 +256,7 @@ class BoardNode:
     # def number_of_blocking_vehicles(self):
     #     # returns the number of vehicles that are blocking the ambulance
     #     ambulance_right_position = self.get_vehicle('A').get_right()
-    #
     #     count = 0
-    #
     #     for v in self.vehicles:
     #         if v.letter != 'A' and v.is_on_exit_row() and v.x > ambulance_right_position:
     #             count += 1

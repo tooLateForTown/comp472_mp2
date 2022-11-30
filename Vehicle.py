@@ -31,7 +31,7 @@ class Vehicle:
             return self.y
 
     def is_on_exit_row(self):
-        return self.y >= 2 and self.get_bottom() <= 2
+        return self.y <= 2 and self.get_bottom() >= 2
 
 
 

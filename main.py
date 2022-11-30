@@ -16,19 +16,19 @@ vehicles = []
 
 
 # ***********************
-RUN_ALL = True  
+RUN_ALL = False
 LAMBDA = 5
-VERBOSE = False
+VERBOSE = True
 # or individually if RUN_ALL = False
 RUN_UCS = False
 RUN_GBFS_H1 = False
 RUN_GBFS_H2 = False
 RUN_GBFS_H3 = False
 RUN_GBFS_H4 = False
-RUN_A_H1 = True
-RUN_A_H2 = False
+RUN_A_H1 = False
+RUN_A_H2 = True
 RUN_A_H3 = False
-RUN_A_H4 = False
+RUN_A_H4 = True
 # ***********************
 
 

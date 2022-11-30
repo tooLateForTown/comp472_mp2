@@ -48,8 +48,8 @@ class BoardQueue:
                 self.nodes.sort(key=lambda x: x.h)
             if heuristic == HEURISTIC.H3_H1_TIMES_LAMBDA:
                 self.nodes.sort(key=lambda x: x.h * lambda_val)
-            # if heuristic == HEURISTIC.H4_CUSTOM: #todo turn this back omn
-            #     self.nodes.sort(key=lambda x: x.custom_heuristic)
+            if heuristic == HEURISTIC.H4_CUSTOM:
+                self.nodes.sort(key=lambda x: x.h)
         elif algorithm == ALGORITHM.A:
             if heuristic == HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES:
                 self.nodes.sort(key=lambda x: x.cost + x.h)
@@ -57,8 +57,8 @@ class BoardQueue:
                 self.nodes.sort(key=lambda x: x.cost + x.h)
             if heuristic == HEURISTIC.H3_H1_TIMES_LAMBDA:
                 self.nodes.sort(key=lambda x: (x.cost + x.h) * lambda_val)
-            # if heuristic == HEURISTIC.H4_CUSTOM:  # todo turn this on
-            #     self.nodes.sort(key=lambda x: x.cost + x.custom_heuristic)
+            if heuristic == HEURISTIC.H4_CUSTOM:
+                self.nodes.sort(key=lambda x: x.cost + x.h)
 
 
     

@@ -107,7 +107,8 @@ class Solver:
                 elif self.heuristic == HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS:
                     c.h = c.number_of_blocked_positions()
                 elif self.heuristic == HEURISTIC.H4_CUSTOM:
-                    c.h = 1  #todo fix this  Manhatten disytance
+                    # c.h = c.manhattan_distance()
+                    c.h = c.number_of_blocked_positions_in_area_to_right_of_ambulance_edge()
 
                 self.open.add(c)
         self.open.sort_by_heuristic(self.heuristic, self.algorithm, self.lambda_val)

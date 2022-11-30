@@ -294,5 +294,15 @@ class BoardNode:
     def manhattan_distance(self):
         # returns the distance between vehicle A and the exit. The exit is at (5,2)
         amb = self.get_vehicle('A')
-        return abs(amb.x - 5) + abs(amb.y - 2)
+        return abs(amb.get_right() - 5)
+
+    def number_of_blocked_positions_in_area_to_right_of_ambulance_edge(self):
+        count = 0
+        amb = self.get_vehicle('A')
+        for y in range(0, 6):
+            for x in range(amb.get_right() + 1, 6):
+                if self.board[y][x] != '.':
+                    count += 1
+        return count
+
 

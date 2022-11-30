@@ -1,12 +1,15 @@
 from BoardNode import BoardNode
 from BoardQueue import BoardQueue
 from datetime import datetime
-
 from GenericSolver import GenericSolver
+from globals import HEURISTIC
 
 
 class SolverUCS(GenericSolver):
     # Inherits from GenericSolver
+    #
+    # def __init__(self):
+    #     self.heuristic = HEURISTIC.H0_PURELY_COST_FOR_UCS
 
     def run(self):
 
@@ -67,7 +70,7 @@ class SolverUCS(GenericSolver):
                 add_to_open = False
             if add_to_open:
                 self.open.add(c)
-        self.open.sort_by_cost()
+        self.open.sort_by_heuristic(self.heuristic)
 
 
 

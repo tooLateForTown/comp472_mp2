@@ -86,11 +86,11 @@ class BoardNode:
         v = self.get_vehicle(letter)
         return v.horizontal and v.get_right() >= 5 and v.y == 2
 
-    def vehicle_blocking_amubalnce(self, letter):
+    def vehicle_blocking_ambulance(self, letter):
         ambulance = self.get_vehicle('A')
         v = self.get_vehicle(letter)
-        # if v is to the right of ambulance, it is blocking it from exiting
-        return v.x > ambulance.x
+        # if v is to the right of ambulance and in row 2 (0-based), it is blocking it from exiting
+        return v.is_on_exit_row() and v.x > ambulance.x
 
     def get_vehicle(self, letter) -> Vehicle:
         for v in self.vehicles:
@@ -257,12 +257,12 @@ class BoardNode:
         return f"{self.vehicle_moved} {str(self.vehicle_direction.name).rjust(5)} {self.vehicle_distance} {str(self.vehicle_gas_after_move).rjust(6)} {self.config_string}"
 
     # Hueristic functions
-    def number_of_blocking_vehciles(self):
+    def number_of_blocking_vehicles(self):
         # returns the number of vehicles that are blocking the ambulance
         count = 0
         for v in self.vehicles:
             if v.letter != 'A':
-                if self.vehicle_blocking_amubalnce(v.letter):
+                if self.vehicle_blocking_ambulance(v.letter):
                     count += 1
         return count
     
@@ -276,7 +276,7 @@ class BoardNode:
         return count
 
     def hueristic_multiplied(self, alpha):
-        return self.number_of_blocking_vehciles() * alpha
+        return self.number_of_blocking_vehicles() * alpha
 
 
 

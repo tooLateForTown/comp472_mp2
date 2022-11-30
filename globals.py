@@ -8,3 +8,11 @@ class DIRECTION(Enum):
     right = 2
     down = 3
     left = 4
+
+
+class HEURISTIC(Enum):
+    H0_PURELY_COST_FOR_UCS= 0
+    H1_NUMBER_BLOCKING_VEHICLES = 1
+    H2_NUMBER_BLOCKED_POSITIONS = 2
+    H3_H1_TIMES_LAMBDA = 3
+    H4_CUSTOM = 4

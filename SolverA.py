@@ -3,15 +3,16 @@ from BoardQueue import BoardQueue
 from datetime import datetime
 
 from GenericSolver import GenericSolver
+from globals import HEURISTIC
 
 
 class SolverA(GenericSolver):
     # Inherits from GenericSolver
 
-    def __init__(self, initial_board, heuristic, alpha=1):
-        super().__init__(initial_board)
-        self.heuristic = heuristic
-        self.alpha = alpha
+    # def __init__(self, initial_board, heuristic, lambda_val=1):
+    #     super().__init__(initial_board)
+    #     self.heuristic = heuristic
+    #     self.lambda_val = lambda_val
 
     def run(self):
         self.open.add(self.initial_board)
@@ -54,25 +55,25 @@ class SolverA(GenericSolver):
             return False
 
 
-    def _add_children_to_open(self, board, heuristic):
-        # add successor children on board to open
-        children = board.get_successor_boards()
-        for c in children:
-            add_to_open = True
-            # print(f"{c.move_string} : {c.config_string}")
-            duplicate_in_open = self.open.get_board(c.config_string)
-            # UCS specific check
-            if duplicate_in_open is not None:
-                if duplicate_in_open.cost <= c.cost:
-                    add_to_open = False
-                else:
-                    self.open.remove_board(duplicate_in_open)
-            duplicate_in_closed = self.closed.get_board(c.config_string)  # todo decide if we also care about cost when doing this
-            if duplicate_in_closed is not None:
-                add_to_open = False
-            if add_to_open:
-                self.open.add(c)
-        self.open.sort_by_heuristic(heuristic)
+    # def _add_children_to_open(self, board, heuristic):
+    #     # add successor children on board to open
+    #     children = board.get_successor_boards()
+    #     for c in children:
+    #         add_to_open = True
+    #         # print(f"{c.move_string} : {c.config_string}")
+    #         duplicate_in_open = self.open.get_board(c.config_string)
+    #         # UCS specific check
+    #         if duplicate_in_open is not None:
+    #             if duplicate_in_open.cost <= c.cost:
+    #                 add_to_open = False
+    #             else:
+    #                 self.open.remove_board(duplicate_in_open)
+    #         duplicate_in_closed = self.closed.get_board(c.config_string)  # todo decide if we also care about cost when doing this
+    #         if duplicate_in_closed is not None:
+    #             add_to_open = False
+    #         if add_to_open:
+    #             self.open.add(c)
+    #     self.open.sort_by_heuristic(heuristic)
 
 
 

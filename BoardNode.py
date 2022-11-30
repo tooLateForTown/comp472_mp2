@@ -12,7 +12,6 @@ class BoardNode:
     def __init__(self, config):  # eg: BBIJ....IJCC..IAAMGDDK.MGH.KL.GHFFL.
         self.vehicles = []
         self.board = np.full((6, 6), '.')
-        self.valid = self.load_game(config)
         self.cost = 0
         self.config_string = "to fill in to save computation time while iterating"
         self.parent = None
@@ -24,6 +23,8 @@ class BoardNode:
         self.vehicle_gas_after_move = 0
         self.vehicle_direction = None
         self.vehicle_distance = 0
+        self.h = -1
+        self.valid = self.load_game(config)
 
     def load_game(self, config) -> bool:
         config = config.strip()
@@ -76,6 +77,7 @@ class BoardNode:
         self.config_string = self.board_config_string()
         self.cost = 0
         self.parent = None
+
         return True
 
     def is_goal(self):
@@ -261,6 +263,9 @@ class BoardNode:
     #         if v.letter != 'A' and v.is_on_exit_row() and v.x > ambulance_right_position:
     #             count += 1
     #     return count
+
+    def string_for_searchpath(self):
+        return f"{self.move_string:<10} {self.h + self.cost} {self.cost} {self.h} {self.config_string}  (parent = {self.parent.move_string if self.parent is not None else ''})"  #todo remove move_string and parent
 
     def number_of_blocking_vehicles(self):
         # returns the number of vehicles that are blocking the ambulance

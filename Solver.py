@@ -1,7 +1,7 @@
 from BoardNode import BoardNode
 from BoardQueue import BoardQueue
 from datetime import datetime
-from globals import ALGORITHM
+from globals import ALGORITHM, HEURISTIC
 
 
 class Solver:
@@ -29,8 +29,7 @@ class Solver:
         if (self.verbose):
             print("--- SEARCH PATH ---")
             for b in self.search_path:
-                print(b.move_string)
-
+                print(b.string_for_searchpath())
             print("-- FINAL SOLUTION-- ")
             print(self.generate_final_solution_string_for_output())
         # output result to screen
@@ -101,5 +100,14 @@ class Solver:
             if duplicate_in_closed is not None:
                 add_to_open = False
             if add_to_open:
+                if self.heuristic == HEURISTIC.H0_PURELY_COST_FOR_UCS:
+                    c.h = 0
+                elif self.heuristic == HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES or self.heuristic == HEURISTIC.H3_H1_TIMES_LAMBDA:
+                    c.h = c.number_of_blocking_vehicles()
+                elif self.heuristic == HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS:
+                    c.h = c.number_of_blocked_positions()
+                elif self.heuristic == HEURISTIC.H4_CUSTOM:
+                    c.h = 1  #todo fix this  Manhatten disytance
+
                 self.open.add(c)
         self.open.sort_by_heuristic(self.heuristic, self.algorithm, self.lambda_val)

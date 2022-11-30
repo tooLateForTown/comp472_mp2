@@ -86,11 +86,6 @@ class BoardNode:
         v = self.get_vehicle(letter)
         return v.horizontal and v.get_right() >= 5 and v.y == 2
 
-    def vehicle_blocking_ambulance(self, letter):
-        ambulance = self.get_vehicle('A')
-        v = self.get_vehicle(letter)
-        # if v is to the right of ambulance and in row 2 (0-based), it is blocking it from exiting
-        return v.is_on_exit_row() and v.x > ambulance.x
 
     def get_vehicle(self, letter) -> Vehicle:
         for v in self.vehicles:
@@ -258,14 +253,31 @@ class BoardNode:
         return f"{self.vehicle_moved} {str(self.vehicle_direction.name).rjust(5)} {self.vehicle_distance} {str(self.vehicle_gas_after_move).rjust(6)} {self.config_string}"
 
     # Hueristic functions
+    # def number_of_blocking_vehicles(self):
+    #     # returns the number of vehicles that are blocking the ambulance
+    #     ambulance_right_position = self.get_vehicle('A').get_right()
+    #
+    #     count = 0
+    #
+    #     for v in self.vehicles:
+    #         if v.letter != 'A' and v.is_on_exit_row() and v.x > ambulance_right_position:
+    #             count += 1
+    #     return count
+
     def number_of_blocking_vehicles(self):
         # returns the number of vehicles that are blocking the ambulance
-        count = 0
-        for v in self.vehicles:
-            if v.letter != 'A':
-                if self.vehicle_blocking_ambulance(v.letter):
-                    count += 1
-        return count
+        ambulance_right_position = self.get_vehicle('A').get_right()
+        found_vehicles = set()
+        for x in range(ambulance_right_position + 1, 6):
+            if self.board[2][x] != '.':
+                found_vehicles.add(self.board[2][x])
+        # print(found_vehicles)
+        # if found_vehicles == {'L','K'}:
+        #     self.show_board(True)
+        return len(found_vehicles)
+
+
+
 
     def number_of_blocked_positions(self):
         # returns the number of positions that are non-empty between the ambulance and the exit on row 2

@@ -13,7 +13,7 @@ class Solver:
         self.closed = BoardQueue()
         self.solved = False
         self.finished = False
-        self.solution_path = None
+        self.solution_path = []
         self.search_path = []
         self.run_time = 0
         self.heuristic = heuristic

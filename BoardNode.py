@@ -1,5 +1,3 @@
-import numpy as np
-
 import globals
 from globals import DIRECTION
 from Vehicle import Vehicle
@@ -11,7 +9,7 @@ class BoardNode:
 
     def __init__(self, config):  # eg: BBIJ....IJCC..IAAMGDDK.MGH.KL.GHFFL.
         self.vehicles = []
-        self.board = np.full((6, 6), '.')
+        self.board = ""
         self.cost = 0
         self.config_string = "to fill in to save computation time while iterating"
         self.parent = None
@@ -26,6 +24,12 @@ class BoardNode:
         self.h = -1
         self.valid = self.load_game(config)
 
+    def getYX(self, y, x):
+        return self.board[y * 6 + x]
+
+    def setYX(self, y, x, c):
+        self.board = self.board[:y*6+x] + c + self.board[y*6+x+1:]
+
     def load_game(self, config) -> bool:
         config = config.strip()
         if len(config) < 36:
@@ -34,11 +38,13 @@ class BoardNode:
         # load Board array
         for row in range(0, 6):
             for col in range(0, 6):
-                self.board[row][col] = config[row * 6 + col]
+                self.setYX(row, col, config[row * 6 + col])
+                # self.board[row][col] = config[row * 6 + col]
         # identify the vehicles
         for row in range(0, 6):
             for col in range(0, 6):
-                letter = self.board[row][col]
+                letter = self.getYX(row, col)
+                # letter = self.board[row][col]
                 if letter != '.':
                     vehicle = self.get_vehicle(letter)
                     if vehicle is None:
@@ -46,16 +52,20 @@ class BoardNode:
                         v.x = col  # top left posit
                         v.y = row
                         # determine length and direction
-                        if row < 5 and self.board[row + 1][col] == letter:
+                        if row < 5 and self.getYX(row + 1, col) == letter:
+                        # if row < 5 and self.board[row + 1][col] == letter:
                             v.horizontal = False
                             temp_y = row
-                            while temp_y <= 5 and self.board[temp_y][col] == letter:
+                            while temp_y <= 5 and self.getYX(temp_y, col) == letter:
+                            # while temp_y <= 5 and self.board[temp_y][col] == letter:
                                 v.length += 1
                                 temp_y += 1
-                        elif col < 5 and self.board[row][col + 1] == letter:
+                        elif col < 5 and self.getYX(row, col+1) == letter:
+                        # elif col < 5 and self.board[row][col + 1] == letter:
                             v.horizontal = True
                             temp_x = col
-                            while temp_x <= 5 and self.board[row][temp_x] == letter:
+                            while temp_x <= 5 and self.getYX(row, temp_x) == letter:
+                            # while temp_x <= 5 and self.board[row][temp_x] == letter:
                                 v.length += 1
                                 temp_x += 1
                         else:
@@ -88,7 +98,6 @@ class BoardNode:
         v = self.get_vehicle(letter)
         return v.horizontal and v.get_right() >= 5 and v.y == 2
 
-
     def get_vehicle(self, letter) -> Vehicle:
         for v in self.vehicles:
             if v.letter == letter:
@@ -99,11 +108,14 @@ class BoardNode:
         print('   a b c d e f')
         print("  -------------")
         count = 1
-        for row in self.board:
+        for row in range(0, 6):
+        # for row in self.board:
             print(count, end='| ')
             count += 1
-            for col in row:
-                print(col, end=' ')
+            for col in range(0, 6):
+                print(self.board[row*6+col:row*6+col+1], end=' ')
+            # for col in row:
+            #     print(col, end=' ')
             print()
         print("  -------------")
         print(f"{len(self.vehicles)} vehicles: ", end='')
@@ -147,22 +159,26 @@ class BoardNode:
 
         if direction == DIRECTION.up:
             y -= 1
-            while y >= 0 and self.board[y][x] == '.':
+            while y >= 0 and self.getYX(y, x) == '.':
+            # while y >= 0 and self.board[y][x] == '.':
                 count += 1
                 y -= 1
         if direction == DIRECTION.down:
             y += 1
-            while y <= 5 and self.board[y][x] == '.':
+            while y <= 5 and self.getYX(y, x) == '.':
+            # while y <= 5 and self.board[y][x] == '.':
                 count += 1
                 y += 1
         if direction == DIRECTION.right:
             x += 1
-            while x <= 5 and self.board[y][x] == '.':
+            while x <= 5 and self.getYX(y, x) == '.':
+            # while x <= 5 and self.board[y][x] == '.':
                 count += 1
                 x += 1
         if direction == DIRECTION.left:
             x -= 1
-            while x >= 0 and self.board[y][x] == '.':
+            while x >= 0 and self.getYX(y, x) == '.':
+            # while x >= 0 and self.board[y][x] == '.':
                 count += 1
                 x -= 1
 
@@ -229,14 +245,16 @@ class BoardNode:
         return child_board
 
     def rebuild_board_based_on_vehicles(self):
-        self.board = np.full((6, 6), '.')
+        self.board = "...................................."
         for v in self.vehicles:
             if v.horizontal:
                 for i in range(0, v.length):
-                    self.board[v.y][v.x + i] = v.letter
+                    self.setYX(v.y, v.x + i, v.letter)
+                    # self.board[v.y][v.x + i] = v.letter
             if not v.horizontal:
                 for i in range(0, v.length):
-                    self.board[v.y + i][v.x] = v.letter
+                    self.setYX(v.y+i, v.x, v.letter)
+                    # self.board[v.y + i][v.x] = v.letter
 
     @staticmethod
     def path_to_parent(end_board):
@@ -265,29 +283,29 @@ class BoardNode:
     #     return count
 
     def string_for_searchpath(self):
-        return f"{self.move_string:<10} {self.h + self.cost} {self.cost} {self.h} {self.config_string}  (parent = {self.parent.move_string if self.parent is not None else ''})"  #todo remove move_string and parent
+        return f"{self.move_string:<10} {self.h + self.cost} {self.cost} {self.h} {self.config_string}  (parent = {self.parent.move_string if self.parent is not None else ''})"  # todo remove move_string and parent
 
     def number_of_blocking_vehicles(self):
         # returns the number of vehicles that are blocking the ambulance
         ambulance_right_position = self.get_vehicle('A').get_right()
         found_vehicles = set()
         for x in range(ambulance_right_position + 1, 6):
-            if self.board[2][x] != '.':
-                found_vehicles.add(self.board[2][x])
+            if self.getYX(2, x) != '.':
+                found_vehicles.add(self.getYX(2, x))
+            # if self.board[2][x] != '.':
+            #     found_vehicles.add(self.board[2][x])
         # print(found_vehicles)
         # if found_vehicles == {'L','K'}:
         #     self.show_board(True)
         return len(found_vehicles)
-
-
-
 
     def number_of_blocked_positions(self):
         # returns the number of positions that are non-empty between the ambulance and the exit on row 2
         count = 0
         amb = self.get_vehicle('A')
         for x in range(amb.get_right() + 1, 6):
-            if self.board[2][x] != '.':
+            if self.getYX(2, x) != '.':
+            # if self.board[2][x] != '.':
                 count += 1
         return count
 
@@ -301,8 +319,7 @@ class BoardNode:
         amb = self.get_vehicle('A')
         for y in range(0, 6):
             for x in range(amb.get_right() + 1, 6):
-                if self.board[y][x] != '.':
+                if self.getYX(y, x) != '.':
+                # if self.board[y][x] != '.':
                     count += 1
         return count
-
-

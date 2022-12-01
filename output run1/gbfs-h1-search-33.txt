@@ -1,0 +1,4 @@
+1 1 0 ..BBB........AA...D..CEED..C..D..FFF
+2 2 0 ..BBB.........AA..D..CEED..C..D..FFF
+2 2 0 ..BBB..........AA.D..CEED..C..D..FFF
+2 2 0 ..BBB...........AAD..CEED..C..D..FFF

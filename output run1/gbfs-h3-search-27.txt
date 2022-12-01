@@ -1,0 +1,4 @@
+1 1 0 BBBCC....DD..AA....F..GH.F..GH....G.
+2 2 0 BBBCC....DD...AA...F..GH.F..GH....G.
+2 2 0 BBBCC....DD....AA..F..GH.F..GH....G.
+2 2 0 BBBCC....DD.....AA.F..GH.F..GH....G.

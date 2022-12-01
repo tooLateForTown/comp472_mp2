@@ -1,0 +1,7 @@
+4 1 3 ...B.CD..B.CD..AAC.EEE...FF.....GGG.
+4 1 3 ...B.CD..B.CD.AA.C.EEE...FF....GGG..
+4 1 3 ...B.CD..B.CD.AA.C.EEE...FF...GGG...
+5 2 3 ...B..D..B.CD..AAC.EEE.C.FF.....GGG.
+5 2 3 ...B..D..B..D..AAC.EEE.C.FF..C..GGG.
+5 2 3 ...B..D..B..D..AA..EEE.C.FF..C..GGGC
+3 3 0 ...B..D..B..D...AA.EEE.C.FF..C..GGGC

@@ -1,0 +1,3 @@
+10 1 9 BBBCC..DD....AAEE..F..GH.F..GH....G.
+9 2 7 BBBCC..DD....AA....F..GH.F..GH....G.
+3 3 0 BBBCC..DD.......AA.F..GH.F..GH....G.

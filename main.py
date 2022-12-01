@@ -5,6 +5,7 @@ from datetime import datetime
 from Solver import Solver
 from globals import HEURISTIC, ALGORITHM
 import InputManager
+import os
 
 board = np.full((6, 6), '.')
 vehicles = []
@@ -16,7 +17,7 @@ vehicles = []
 # ***********************
 RUN_ALL = True
 LAMBDA = 5
-VERBOSE = False
+VERBOSE = True
 # or individually if RUN_ALL = False
 RUN_UCS = False
 RUN_GBFS_H1 = False
@@ -41,6 +42,13 @@ def main():
         exit()
     print(f"{len(puzzles)} puzzles found in file.")
 
+    #reset content of all txt files
+    directory = 'Text Files'
+    for filename in os.listdir(directory):
+        fn = os.path.join(directory, filename)
+        f = open(fn, "w")
+        f.close()
+
     counter = 0
     start_time = datetime.now()
     for puzzle in puzzles:
@@ -57,15 +65,6 @@ def main():
 def run_single_puzzle(puzzle):
     initial_board = BoardNode(puzzle)
     initial_board.show_board()
-
-    #reset content of all txt files
-    import os
-
-    directory = 'Text Files'
-    for filename in os.listdir(directory):
-        fn = os.path.join(directory, filename)
-        f = open(fn, "w")
-        f.close()
 
     if RUN_UCS or RUN_ALL:
         print(f"\n**** RUNNING UCS ******")

@@ -3,7 +3,6 @@ from BoardQueue import BoardQueue
 from datetime import datetime
 from globals import ALGORITHM, HEURISTIC
 
-
 class Solver:
 
     def __init__(self, initial_board, heuristic, algorithm,  verbose=False, lambda_val=5):
@@ -118,25 +117,27 @@ class Solver:
                 self.open.add(c)
         self.open.sort_by_heuristic(self.heuristic, self.algorithm, self.lambda_val)
 
-
     def add_to_solution_file(self, s):
-        
+
+        puzzleCounter = 1 #temp variable to make it run, needs to increment
         if self.algorithm.name.lower() == "ucs":
-            f = open('Text Files/' + self.algorithm.name.lower() + "-sol-" + "NUMBER HERE" + ".txt", "a")
+
+            f = open('Text Files/' + self.algorithm.name.lower() + "-sol-" + str(puzzleCounter) + ".txt", "a")
             f.write(s + "\n")
             f.close()
         else:
-            f = open('Text Files/' + self.algorithm.name.lower() + "-" + self.heuristic.name[0:2].lower() + "-sol-" + "NUMBER HERE" + ".txt", "a")
+            f = open('Text Files/' + self.algorithm.name.lower() + "-" + self.heuristic.name[0:2].lower() + "-sol-" + str(puzzleCounter) + ".txt", "a")
             f.write(s + "\n")
             f.close()
 
     def add_to_search_file(self, b):
 
+        puzzleCounter = 1 #temp variable to make it run, needs to increment
         if self.algorithm.name.lower() == "ucs":
-            f = open('Text Files/' + self.algorithm.name.lower() + "-search-" + "NUMBER HERE" + ".txt", "a")
+            f = open('Text Files/' + self.algorithm.name.lower() + "-search-" + str(puzzleCounter) + ".txt", "a")
             f.write(b + "\n")
             f.close()
         else:
-            f = open('Text Files/' + self.algorithm.name.lower() + "-" + self.heuristic.name[0:2].lower() + "-search-" + "NUMBER HERE" + ".txt", "a")
+            f = open('Text Files/' + self.algorithm.name.lower() + "-" + self.heuristic.name[0:2].lower() + "-search-" + str(puzzleCounter) + ".txt", "a")
             f.write(b + "\n")
             f.close()

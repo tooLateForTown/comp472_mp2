@@ -1,7 +1,0 @@
-Start      -1 0 -1 BBIJ....IJCC..IAAMGDDK.MGH.KL.GHFFL.  (parent = )
-M down 1   1 1 0 BBIJ....IJCC..IAA.GDDK.MGH.KLMGHFFL.  (parent = Start)
-M down 2   1 1 0 BBIJ....IJCC..IAA.GDDK..GH.KLMGHFFLM  (parent = Start)
-G up 1     2 1 1 BBIJ....IJCCG.IAAMGDDK.MGH.KL..HFFL.  (parent = Start)
-G up 2     2 1 1 BBIJ..G.IJCCG.IAAMGDDK.M.H.KL..HFFL.  (parent = Start)
-L up 1     2 1 1 BBIJ....IJCC..IAAMGDDKLMGH.KL.GHFF..  (parent = Start)
-A right 1  2 2 0 BBIJ....IJCC..I.AAGDDK.MGH.KLMGHFFL.  (parent = M down 1)

@@ -32,6 +32,7 @@ RUN_A_H1 = False
 RUN_A_H2 = False
 RUN_A_H3 = False
 RUN_A_H4 = False
+SPECIAL_RUN_LAMBDA_TEST = False
 # ***********************
 
 
@@ -80,6 +81,17 @@ def main():
 def run_single_puzzle(puzzle, id):
     initial_board = BoardNode(puzzle)
     initial_board.show_board()
+
+
+    if SPECIAL_RUN_LAMBDA_TEST == True:
+        print(" **** RUNNING SPECIAL LAMBDA TEST!!!  *****")
+        for lambda_val in range(2, 20, 2):
+            print(f"Lambda={lambda_val}")
+            Solver(initial_board, HEURISTIC.H3_H1_TIMES_LAMBDA, ALGORITHM.GBFS, f"{id}-{lambda_val}", VERBOSE, lambda_val).run()
+            Solver(initial_board, HEURISTIC.H3_H1_TIMES_LAMBDA, ALGORITHM.A, f"{id}-{lambda_val}", VERBOSE,
+                   lambda_val).run()
+        return
+
 
     if RUN_UCS or RUN_ALL:
         print(f"\n**** RUNNING UCS ******")

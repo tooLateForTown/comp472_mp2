@@ -121,6 +121,8 @@ class Solver:
                     c.h = c.number_of_blocking_vehicles()
                 elif self.heuristic == HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS:
                     c.h = c.number_of_blocked_positions()
+                elif self.heuristic == HEURISTIC.H3_H1_TIMES_LAMBDA:
+                    c.h = c.number_of_blocking_vehicles() * self.lambda_val
                 elif self.heuristic == HEURISTIC.H4_CUSTOM:
                     # c.h = c.manhattan_distance()
                     c.h = c.number_of_blocked_positions_in_area_to_right_of_ambulance_edge()

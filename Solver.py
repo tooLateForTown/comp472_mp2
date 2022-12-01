@@ -2,10 +2,11 @@ from BoardNode import BoardNode
 from BoardQueue import BoardQueue
 from datetime import datetime
 from globals import ALGORITHM, HEURISTIC
+import globals
 
 class Solver:
 
-    def __init__(self, initial_board, heuristic, algorithm,  verbose=False, lambda_val=5):
+    def __init__(self, initial_board, heuristic, algorithm, puzzle_id, verbose=False, lambda_val=5):
         self.initial_board = initial_board
         self.solved_board = None
         self.open = BoardQueue()
@@ -19,19 +20,25 @@ class Solver:
         self.lambda_val = 5
         self.algorithm = algorithm
         self.verbose = verbose
+        self.puzzle_id = puzzle_id
 
     def run(self):
         self.open.add(self.initial_board)
         start_time = datetime.now()
         self._loop_until_end()
         self.run_time = (datetime.now() - start_time).total_seconds()
-        if (self.verbose):
+        # Generate output files and optionally print to screen
+        solution_text = self.generate_final_solution_string_for_output()
+        if self.verbose:
             print("--- SEARCH PATH ---")
-            for b in self.search_path:
+        for b in self.search_path:
+            if self.verbose:
                 print(b.string_for_searchpath())
-                self.add_to_search_file(b.string_for_searchpath())
+            self.add_to_search_file(b.string_for_searchpath())
+        if self.verbose:
             print("-- FINAL SOLUTION-- ")
-            print(self.generate_final_solution_string_for_output())
+            print(solution_text)
+
         # output result to screen
         print(f"solution_steps={len(self.solution_path)}, search_path={len(self.search_path)}, time={'{:.2f}'.format(self.run_time)} secs")
 
@@ -83,6 +90,8 @@ class Solver:
         
         #output to file
         self.add_to_solution_file(s)
+        # Build csv
+        self.append_results_to_analysis_csv()
         
         return s
 
@@ -118,26 +127,51 @@ class Solver:
         self.open.sort_by_heuristic(self.heuristic, self.algorithm, self.lambda_val)
 
     def add_to_solution_file(self, s):
+        # puzzleCounter = 1 #temp variable to make it run, needs to increment
 
-        puzzleCounter = 1 #temp variable to make it run, needs to increment
         if self.algorithm.name.lower() == "ucs":
 
-            f = open('Text Files/' + self.algorithm.name.lower() + "-sol-" + str(puzzleCounter) + ".txt", "a")
+            f = open(f'{globals.OUTPUT_FOLDER}/' + self.algorithm.name.lower() + "-sol-" + str(self.puzzle_id) + ".txt", "a")
             f.write(s + "\n")
             f.close()
         else:
-            f = open('Text Files/' + self.algorithm.name.lower() + "-" + self.heuristic.name[0:2].lower() + "-sol-" + str(puzzleCounter) + ".txt", "a")
+            f = open(f'{globals.OUTPUT_FOLDER}/' + self.algorithm.name.lower() + "-" + self.heuristic.name[0:2].lower() + "-sol-" + str(self.puzzle_id) + ".txt", "a")
             f.write(s + "\n")
             f.close()
 
     def add_to_search_file(self, b):
 
-        puzzleCounter = 1 #temp variable to make it run, needs to increment
+        # puzzleCounter = 1 #temp variable to make it run, needs to increment
         if self.algorithm.name.lower() == "ucs":
-            f = open('Text Files/' + self.algorithm.name.lower() + "-search-" + str(puzzleCounter) + ".txt", "a")
+            f = open(f'{globals.OUTPUT_FOLDER}/' + self.algorithm.name.lower() + "-search-" + str(self.puzzle_id) + ".txt", "a")
             f.write(b + "\n")
             f.close()
         else:
-            f = open('Text Files/' + self.algorithm.name.lower() + "-" + self.heuristic.name[0:2].lower() + "-search-" + str(puzzleCounter) + ".txt", "a")
+            f = open(f'{globals.OUTPUT_FOLDER}/' + self.algorithm.name.lower() + "-" + self.heuristic.name[0:2].lower() + "-search-" + str(self.puzzle_id) + ".txt", "a")
             f.write(b + "\n")
             f.close()
+
+    def append_results_to_analysis_csv(self):
+        if self.algorithm == ALGORITHM.UCS:
+            algo = "UCS"
+        elif self.algorithm == ALGORITHM.GBFS:
+            algo = "GBFS"
+        elif self.algorithm == ALGORITHM.A:
+            algo = "A/A*"
+        if self.heuristic == HEURISTIC.H0_PURELY_COST_FOR_UCS:
+            heu = "NA"
+        elif self.heuristic == HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES:
+            heu = "h1"
+        elif self.heuristic == HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS:
+            heu = "h2"
+        elif self.heuristic == HEURISTIC.H3_H1_TIMES_LAMBDA:
+            heu = "h3"
+        elif self.heuristic == HEURISTIC.H4_CUSTOM:
+            heu = "h4"
+
+        if globals.analysis_csv == "":
+            globals.analysis_csv += "Number, Algorithm, Heuristic, Solution Length, Search Length, Execution Time"
+        globals.analysis_csv += "\n"
+        globals.analysis_csv += f"{self.puzzle_id},{algo},{heu},{len(self.solution_path)}, {len(self.search_path)}, {self.run_time:.2f}"
+
+

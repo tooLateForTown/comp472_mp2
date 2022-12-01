@@ -1,6 +1,11 @@
 from enum import Enum
 
 DEFAULT_GAS = 100
+INPUT_FOLDER = "input"
+FIFTY_PUZZLES_FILE = "puzzles50.txt"
+OUTPUT_FOLDER = "output"
+
+analysis_csv = ""
 
 
 class DIRECTION(Enum):

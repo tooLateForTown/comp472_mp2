@@ -130,3 +130,6 @@ dmypy.json
 
 #JetBrains pyCharm
 .idea/
+
+# Output folder txt's for project
+output/*.txt

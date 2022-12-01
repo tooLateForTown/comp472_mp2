@@ -4,8 +4,10 @@ from BoardNode import BoardNode
 from datetime import datetime
 from Solver import Solver
 from globals import HEURISTIC, ALGORITHM
+import globals
 import InputManager
 import os
+import puzzle_generator
 
 board = np.full((6, 6), '.')
 vehicles = []
@@ -17,7 +19,10 @@ vehicles = []
 # ***********************
 RUN_ALL = True
 LAMBDA = 5
-VERBOSE = True
+VERBOSE = False
+GENERATE_PUZZLES_FILE = True
+QUANTITY_PUZZLES_TO_GENERATE = 20
+PUZZLE_MAX_QTY_CARS = 3 # set to -1 for all of them.  Used to test toy puzzles #todo remove
 # or individually if RUN_ALL = False
 RUN_UCS = False
 RUN_GBFS_H1 = False
@@ -28,13 +33,13 @@ RUN_A_H1 = False
 RUN_A_H2 = False
 RUN_A_H3 = False
 RUN_A_H4 = False
-
-
 # ***********************
 
 
 def main():
     print("MP2: Rush-Hour")
+    if GENERATE_PUZZLES_FILE:
+        puzzle_generator.generate_puzzles_file(QUANTITY_PUZZLES_TO_GENERATE, qty_max_cars=PUZZLE_MAX_QTY_CARS)
     puzzles = InputManager.choose_input_file()
     if len(puzzles) == 0:
         print(f"No Puzzles found")
@@ -43,11 +48,16 @@ def main():
     print(f"{len(puzzles)} puzzles found in file.")
 
     #reset content of all txt files
-    directory = 'Text Files'
+    directory = globals.OUTPUT_FOLDER
+    # for filename in os.listdir(directory):
+    #     fn = os.path.join(directory, filename)
+    #     f = open(fn, "w")
+    #     f.close()
+    # delete contents of folder
+    print(f"Deleting files in {directory}...")
     for filename in os.listdir(directory):
-        fn = os.path.join(directory, filename)
-        f = open(fn, "w")
-        f.close()
+        file_to_delete = os.path.join(directory, filename)
+        os.remove(file_to_delete)
 
     counter = 0
     start_time = datetime.now()
@@ -56,43 +66,49 @@ def main():
         print("\n-----------------------------------------------------------")
         print(f" Puzzle {counter} : {puzzle}")
         print("-----------------------------------------------------------")
-        run_single_puzzle(puzzle)
+        run_single_puzzle(puzzle, counter)
     run_time = (datetime.now() - start_time).total_seconds()
+    # Save analysis CSV
+    csv_file = os.path.join(globals.OUTPUT_FOLDER, "analysis.csv")
+    print(f"Analysis CSV saved to {csv_file}")
+    with open(csv_file, 'a') as f:
+        f.write(globals.analysis_csv)
+
     print(f'\nTotal Runtime: {"{:.2f}".format(run_time)} seconds')
     print("\n*** The End! *** ")
 
 
-def run_single_puzzle(puzzle):
+def run_single_puzzle(puzzle, id):
     initial_board = BoardNode(puzzle)
     initial_board.show_board()
 
     if RUN_UCS or RUN_ALL:
         print(f"\n**** RUNNING UCS ******")
-        Solver(initial_board, HEURISTIC.H0_PURELY_COST_FOR_UCS, ALGORITHM.UCS, VERBOSE).run()
+        Solver(initial_board, HEURISTIC.H0_PURELY_COST_FOR_UCS, ALGORITHM.UCS, id, VERBOSE).run()
     if RUN_GBFS_H1 or RUN_ALL:
         print(f"\n**** RUNNING GBFS on H1 ******")
-        Solver(initial_board, HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES, ALGORITHM.GBFS, VERBOSE).run()
+        Solver(initial_board, HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES, ALGORITHM.GBFS, id, VERBOSE).run()
     if RUN_GBFS_H2 or RUN_ALL:
         print(f"\n**** RUNNING GBFS on H2 ******")
-        Solver(initial_board, HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS, ALGORITHM.GBFS, VERBOSE).run()
+        Solver(initial_board, HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS, ALGORITHM.GBFS, id, VERBOSE).run()
     if RUN_GBFS_H3 or RUN_ALL:
         print(f"\n**** RUNNING GBFS on H3 ******")
-        Solver(initial_board, HEURISTIC.H3_H1_TIMES_LAMBDA, ALGORITHM.GBFS, VERBOSE, LAMBDA).run()
+        Solver(initial_board, HEURISTIC.H3_H1_TIMES_LAMBDA, ALGORITHM.GBFS, id, VERBOSE, LAMBDA).run()
     if RUN_GBFS_H4 or RUN_ALL:
         print(f"\n**** RUNNING GBFS on H4 ******")
-        Solver(initial_board, HEURISTIC.H4_CUSTOM, ALGORITHM.GBFS, VERBOSE).run()
+        Solver(initial_board, HEURISTIC.H4_CUSTOM, ALGORITHM.GBFS, id, VERBOSE).run()
     if RUN_A_H1 or RUN_ALL:
         print(f"\n**** RUNNING A/A* on H1 ******")
-        Solver(initial_board, HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES, ALGORITHM.A, VERBOSE).run()
+        Solver(initial_board, HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES, ALGORITHM.A, id, VERBOSE).run()
     if RUN_A_H2 or RUN_ALL:
         print(f"\n**** RUNNING A/A* on H2 ******")
-        Solver(initial_board, HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS, ALGORITHM.A, VERBOSE).run()
+        Solver(initial_board, HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS, ALGORITHM.A, id, VERBOSE).run()
     if RUN_A_H3 or RUN_ALL:
         print(f"\n**** RUNNING A/A* on H3 ******")
-        Solver(initial_board, HEURISTIC.H3_H1_TIMES_LAMBDA, ALGORITHM.A, VERBOSE, LAMBDA).run()
+        Solver(initial_board, HEURISTIC.H3_H1_TIMES_LAMBDA, ALGORITHM.A, id, VERBOSE, LAMBDA).run()
     if RUN_A_H4 or RUN_ALL:
         print(f"\n**** RUNNING A/A* on H4 ******")
-        Solver(initial_board, HEURISTIC.H4_CUSTOM, ALGORITHM.A, VERBOSE).run()
+        Solver(initial_board, HEURISTIC.H4_CUSTOM, ALGORITHM.A, id, VERBOSE).run()
 
 if __name__ == "__main__":
     main()

@@ -6,9 +6,15 @@
 import random
 import os
 
-def generate_random_parking_lot(grid):
+import globals
+
+
+def generate_random_parking_lot(grid, max_cars=-1):
     car_letters = ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M']
-    ambulance_position = random.randint(0, 4)
+    # if max_cars != -1:  #todo ask Mahmoud about his
+    #     while len(car_letters) > max_cars:
+    #         car_letters.pop()
+    ambulance_position = random.randint(0, 3)
     # Place ambulance
     grid[2][ambulance_position] = 'A'
     grid[2][ambulance_position + 1] = 'A'
@@ -62,11 +68,16 @@ def generate_random_parking_lot(grid):
             puzzle_string += grid[i][j]
     return puzzle_string
 
-os.remove('puzzles.txt')
-# Generate 50 random parking lots
-for i in range(50):
-    grid = [[0 for x in range(6)] for y in range(6)]
-    puzzle_string = generate_random_parking_lot(grid)
-    # Write puzzle to file
-    with open('puzzles.txt', 'a') as f:
-        f.write(puzzle_string + '\n')
+
+def generate_puzzles_file(qty=50, qty_max_cars=-1):
+    file_name_with_path = os.path.join(globals.INPUT_FOLDER, globals.FIFTY_PUZZLES_FILE)
+    print(f"Generating {qty} puzzles into {file_name_with_path}...")
+    if os.path.exists(file_name_with_path):
+        os.remove(file_name_with_path)
+    # Generate 50 random parking lots
+    for i in range(qty):
+        grid = [[0 for x in range(6)] for y in range(6)]
+        puzzle_string = generate_random_parking_lot(grid, qty_max_cars)
+        # Write puzzle to file
+        with open(file_name_with_path, 'a') as f:
+            f.write(puzzle_string + '\n')

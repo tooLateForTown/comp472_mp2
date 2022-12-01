@@ -1,13 +1,13 @@
 import os
+import globals
 
-DEFAULT_INPUT_FOLDER = "input"
+# DEFAULT_INPUT_FOLDER = "input"
 
 
 def choose_input_file():
-    path = DEFAULT_INPUT_FOLDER
-    dir_list = os.listdir(path)
+    dir_list = os.listdir(globals.INPUT_FOLDER)
     file_count = len(dir_list)
-    print(f"Choose file to load from /{DEFAULT_INPUT_FOLDER}, (q to quit)")
+    print(f"Choose file to load from /{globals.INPUT_FOLDER}, (q to quit)")
     counter = 0
     for d in dir_list:
         print(f"{counter:<3}{d}")
@@ -25,7 +25,7 @@ def choose_input_file():
                 selected = int(choice)
 
     print(f"You selected: {dir_list[selected]}")
-    return process_input_file(f"{DEFAULT_INPUT_FOLDER}/{dir_list[selected]}")
+    return process_input_file(f"{globals.INPUT_FOLDER}/{dir_list[selected]}")
 
 def process_input_file(file_name):
     # returns a list of puzzles
@@ -34,7 +34,7 @@ def process_input_file(file_name):
         for line in f:
             line = line.strip()
             if line == "":
-                print("(skipped blank")
+                print("(Skipped blank)")
             elif line[0] == '#':
                 print(f"(Skipped {line})")
             else:

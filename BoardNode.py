@@ -126,10 +126,14 @@ class BoardNode:
 
     def string_of_board(self):
         s = ""
-        for row in self.board:
-            for col in row:
-                s += col
+        for row in range(0,6):
+            for col in range(0,6):
+                s += self.board[row*6 + col]
             s += "\n"
+        # for row in self.board:
+        #     for col in row:
+        #         s += col
+        #     s += "\n"
         return s
 
     def board_config_string(self, include_gas=False):
@@ -272,18 +276,8 @@ class BoardNode:
     def string_for_solution(self):
         return f"{self.vehicle_moved} {str(self.vehicle_direction.name).rjust(5)} {self.vehicle_distance} {str(self.vehicle_gas_after_move).rjust(6)} {self.config_string}"
 
-    # Hueristic functions
-    # def number_of_blocking_vehicles(self):
-    #     # returns the number of vehicles that are blocking the ambulance
-    #     ambulance_right_position = self.get_vehicle('A').get_right()
-    #     count = 0
-    #     for v in self.vehicles:
-    #         if v.letter != 'A' and v.is_on_exit_row() and v.x > ambulance_right_position:
-    #             count += 1
-    #     return count
-
     def string_for_searchpath(self):
-        return f"{self.move_string:<10} {self.h + self.cost} {self.cost} {self.h} {self.config_string}  (parent = {self.parent.move_string if self.parent is not None else ''})"  # todo remove move_string and parent
+        return f"{self.h + self.cost} {self.cost} {self.h} {self.config_string}"
 
     def number_of_blocking_vehicles(self):
         # returns the number of vehicles that are blocking the ambulance
@@ -323,3 +317,11 @@ class BoardNode:
                 # if self.board[y][x] != '.':
                     count += 1
         return count
+
+    def car_fuel_for_output(self):
+        s = ""
+        for v in self.vehicles:
+            if s != "":
+                s += ", "
+            s += f"{v.letter}:{v.gas}"
+        return s

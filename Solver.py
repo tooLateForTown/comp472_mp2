@@ -34,7 +34,8 @@ class Solver:
         for b in self.search_path:
             if self.verbose:
                 print(b.string_for_searchpath())
-            self.add_to_search_file(b.string_for_searchpath())
+            if b.move_string != "Start":
+                self.add_to_search_file(b.string_for_searchpath())
         if self.verbose:
             print("-- FINAL SOLUTION-- ")
             print(solution_text)
@@ -73,15 +74,16 @@ class Solver:
         if self.solved:
             s = f"Initial board configuration: {self.initial_board.board_config_string(include_gas=True)}\n"
             s += f"\n{self.initial_board.string_of_board()}"
-            s += "Car fuel available: TO COME \n"
+            s += f"\nCar fuel available: {self.initial_board.car_fuel_for_output()} \n"
             s += f'\nRuntime: {"{:.2f}".format(self.run_time)} seconds'
             s += f"\nSearch path length: {len(self.search_path)} states"
-            s += f"\nSolution path length: {len(self.solution_path)} states"
+            s += f"\nSolution path length: {len(self.solution_path)} moves"
             s += f"\nSolution path: "
             separator = ""
             for b in self.solution_path:
                 s += f"{separator}{b.move_string}"
                 separator = "; "
+            s += "\n"
             for b in self.solution_path:
                 s += f"\n{b.string_for_solution()}"
             s += f"\n\n{self.solved_board.string_of_board()}"
@@ -173,5 +175,6 @@ class Solver:
             globals.analysis_csv += "Number, Algorithm, Heuristic, Solution Length, Search Length, Execution Time"
         globals.analysis_csv += "\n"
         globals.analysis_csv += f"{self.puzzle_id},{algo},{heu},{len(self.solution_path)}, {len(self.search_path)}, {self.run_time:.2f}"
+
 
 

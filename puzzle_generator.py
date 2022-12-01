@@ -10,10 +10,7 @@ import globals
 
 
 def generate_random_parking_lot(grid, max_cars=-1):
-    car_letters = ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M']
-    # if max_cars != -1:  #todo ask Mahmoud about his
-    #     while len(car_letters) > max_cars:
-    #         car_letters.pop()
+    car_letters = ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Q']
     ambulance_position = random.randint(0, 3)
     # Place ambulance
     grid[2][ambulance_position] = 'A'
@@ -21,12 +18,12 @@ def generate_random_parking_lot(grid, max_cars=-1):
     for i in range(6):
         for j in range(6):
             if grid[i][j] == 0:
-                random_token = random.randint(0, 1)
-                if random_token == 0:
+                random_token = random.randint(0, 35)
+                if random_token < 10:
                     grid[i][j] = '.'
                 else:
                     car_length = random.randint(2, 3)
-                    car_letter = car_letters.pop()
+                    car_letter = car_letters.pop(0)
                     car_orientation = random.randint(0, 1)
                     car_fits = True
                     if car_orientation == 0:
@@ -41,10 +38,10 @@ def generate_random_parking_lot(grid, max_cars=-1):
                                     grid[i][j + k] = car_letter
                             else:
                                 grid[i][j] = '.'
-                                car_letters.append(car_letter)
+                                car_letters.insert(0, car_letter)
                         else:
                             grid[i][j] = '.'
-                            car_letters.append(car_letter)
+                            car_letters.insert(0, car_letter)
                     elif car_orientation == 1:
                         # check if the car fits in the column and if there is a car in the way
                         if i + car_length <= 6:
@@ -57,10 +54,10 @@ def generate_random_parking_lot(grid, max_cars=-1):
                                     grid[i + k][j] = car_letter
                             else:
                                 grid[i][j] = '.'
-                                car_letters.append(car_letter)
+                                car_letters.insert(0, car_letter)
                         else:
                             grid[i][j] = '.'
-                            car_letters.append(car_letter)
+                            car_letters.insert(0, car_letter)
     # Convert grid to string
     puzzle_string = ''
     for i in range(6):
@@ -69,7 +66,7 @@ def generate_random_parking_lot(grid, max_cars=-1):
     return puzzle_string
 
 
-def generate_puzzles_file(qty=50, qty_max_cars=-1):
+def generate_puzzles_file(qty=50):
     file_name_with_path = os.path.join(globals.INPUT_FOLDER, globals.FIFTY_PUZZLES_FILE)
     print(f"Generating {qty} puzzles into {file_name_with_path}...")
     if os.path.exists(file_name_with_path):
@@ -77,7 +74,8 @@ def generate_puzzles_file(qty=50, qty_max_cars=-1):
     # Generate 50 random parking lots
     for i in range(qty):
         grid = [[0 for x in range(6)] for y in range(6)]
-        puzzle_string = generate_random_parking_lot(grid, qty_max_cars)
+        puzzle_string = generate_random_parking_lot(grid)
         # Write puzzle to file
+        print(puzzle_string)
         with open(file_name_with_path, 'a') as f:
             f.write(puzzle_string + '\n')

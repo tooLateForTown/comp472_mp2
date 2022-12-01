@@ -22,7 +22,6 @@ LAMBDA = 5
 VERBOSE = False
 GENERATE_PUZZLES_FILE = True
 QUANTITY_PUZZLES_TO_GENERATE = 2
-PUZZLE_MAX_QTY_CARS = 3 # set to -1 for all of them.  Used to test toy puzzles #todo remove
 # or individually if RUN_ALL = False
 RUN_UCS = False
 RUN_GBFS_H1 = False
@@ -39,7 +38,7 @@ RUN_A_H4 = False
 def main():
     print("MP2: Rush-Hour")
     if GENERATE_PUZZLES_FILE:
-        puzzle_generator.generate_puzzles_file(QUANTITY_PUZZLES_TO_GENERATE, qty_max_cars=PUZZLE_MAX_QTY_CARS)
+        puzzle_generator.generate_puzzles_file(QUANTITY_PUZZLES_TO_GENERATE)
     puzzles = InputManager.choose_input_file()
     if len(puzzles) == 0:
         print(f"No Puzzles found")

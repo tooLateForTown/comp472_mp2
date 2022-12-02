@@ -9,7 +9,7 @@ import os
 import globals
 
 
-def generate_random_parking_lot(grid, max_cars=-1):
+def generate_random_parking_lot(grid):
     car_letters = ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Q']
     ambulance_position = random.randint(0, 3)
     # Place ambulance
@@ -63,6 +63,18 @@ def generate_random_parking_lot(grid, max_cars=-1):
     for i in range(6):
         for j in range(6):
             puzzle_string += grid[i][j]
+    
+    #AAB...C.BHHHC.RRDD......EEGGGF.....F C3 B4 H1
+    cars_on_board = []
+    for i in range(36):
+        if puzzle_string[i] != '.' and puzzle_string[i] != 'A':
+            if puzzle_string[i] not in cars_on_board:
+                cars_on_board.append(puzzle_string[i])
+    # Give each car 30% chance of having fuel
+    for car in cars_on_board:
+        if random.randint(0, 9) < 3:
+            fuel = random.randint(1, 20)
+            puzzle_string += ' ' + car + str(fuel) + ' '
     return puzzle_string
 
 

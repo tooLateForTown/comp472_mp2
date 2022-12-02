@@ -40,7 +40,7 @@ def main():
     print("MP2: Rush-Hour")
     if GENERATE_PUZZLES_FILE:
         puzzle_generator.generate_puzzles_file(QUANTITY_PUZZLES_TO_GENERATE)
-    puzzles = InputManager.choose_input_file()
+    puzzles, puzzle_file_contents = InputManager.choose_input_file()
     if len(puzzles) == 0:
         print(f"No Puzzles found")
         print(f"Bye")
@@ -49,16 +49,17 @@ def main():
 
     #reset content of all txt files
     directory = globals.OUTPUT_FOLDER
-    # for filename in os.listdir(directory):
-    #     fn = os.path.join(directory, filename)
-    #     f = open(fn, "w")
-    #     f.close()
     # delete contents of folder
     print(f"Deleting files in {directory}...")
     for filename in os.listdir(directory):
         file_to_delete = os.path.join(directory, filename)
         os.remove(file_to_delete)
 
+    # copy over the puzzles file into the output folder for safe-keeping
+    with open(os.path.join(globals.OUTPUT_FOLDER,"puzzles.txt"), 'a') as f:
+        f.write(puzzle_file_contents)
+
+    # Start Running the puzzles
     counter = 0
     start_time = datetime.now()
     for puzzle in puzzles:

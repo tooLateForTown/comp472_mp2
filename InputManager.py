@@ -25,13 +25,16 @@ def choose_input_file():
                 selected = int(choice)
 
     print(f"You selected: {dir_list[selected]}")
-    return process_input_file(f"{globals.INPUT_FOLDER}/{dir_list[selected]}")
+    input_file = f"{globals.INPUT_FOLDER}/{dir_list[selected]}"
+    return process_input_file(input_file)
 
 def process_input_file(file_name):
     # returns a list of puzzles
     puzzles = []
+    puzzle_file_contents = ""
     with open(file_name,'r') as f:
         for line in f:
+            puzzle_file_contents += line
             line = line.strip()
             if line == "":
                 print("(Skipped blank)")
@@ -40,7 +43,7 @@ def process_input_file(file_name):
             else:
                 print(f"Good: {line}")
                 puzzles.append(line)
-    return puzzles
+    return puzzles, puzzle_file_contents
 
 
 

@@ -10,10 +10,10 @@ class BoardQueue:
     # def sort_by_cost(self):  # for UCS
     #     self.nodes.sort(key=lambda x: x.cost)
 
-    def get_board(self, config_string):
-        # returns board if found.  Useful for removing for UCS
+    def get_board(self, board_string):
+        # returns board if found.
         for b in self.nodes:
-            if b.config_string == config_string:
+            if b.board == board_string:
                 return b
         return None
 

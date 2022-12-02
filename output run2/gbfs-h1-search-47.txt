@@ -1,0 +1,4 @@
+1 1 0 .........BBBCAA...CEEFGD...FGD...FHH
+2 2 0 .........BBBC.AA..CEEFGD...FGD...FHH
+2 2 0 .........BBBC..AA.CEEFGD...FGD...FHH
+2 2 0 .........BBBC...AACEEFGD...FGD...FHH

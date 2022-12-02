@@ -1,0 +1,2 @@
+1 1 0 .BBB....CC..D..AA.DEEFG.D..FG....F..
+1 1 0 .BBB....CC..D...AADEEFG.D..FG....F..

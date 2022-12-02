@@ -103,15 +103,20 @@ class Solver:
         for c in children:
             add_to_open = True
             # print(f"{c.move_string} : {c.config_string}")
-            duplicate_in_open = self.open.get_board(c.config_string)
+            duplicate_in_open = self.open.get_board(c.board)
             # UCS specific check
             if duplicate_in_open is not None:
                 if duplicate_in_open.cost <= c.cost:
                     add_to_open = False
                 else:
                     self.open.remove_board(duplicate_in_open)
-            duplicate_in_closed = self.closed.get_board(
-                c.config_string)  # todo decide if we also care about cost when doing this
+            duplicate_in_closed = self.closed.get_board(c.board)  # todo decide if we also care about cost when doing this (see video 6 22:40).  May need to move from closed to open for A*
+            if duplicate_in_closed is not None and duplicate_in_closed.cost > c.cost and self.algorithm == ALGORITHM.A:
+                print(" ----->  SPECIAL CASE: CLOSED BOARD has lower F-Value that successor!   <----------- ")
+
+            # probably don't want config_string for comparuiosn
+            # need to check if the board found has a lower cost (for a*)
+            # but doesn't the gas make them not equivalent???
             if duplicate_in_closed is not None:
                 add_to_open = False
             if add_to_open:

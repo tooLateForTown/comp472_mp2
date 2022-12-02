@@ -9,9 +9,9 @@ class BoardNode:
 
     def __init__(self, config):  # eg: BBIJ....IJCC..IAAMGDDK.MGH.KL.GHFFL.
         self.vehicles = []
-        self.board = ""
+        self.board = ""  # just board info
         self.cost = 0
-        self.config_string = "to fill in to save computation time while iterating"
+        self.config_string = "to fill in to save computation time while iterating"  # board info + gas info
         self.parent = None
         self.depth = 0  # graph node depth
         self.runtime = 0
@@ -243,7 +243,7 @@ class BoardNode:
         child_board.move_string = f"{vehicle.letter} {direction.name} {distance}"
         child_board.config_string = child_board.board_config_string()  # only calculate config string once
         # TODO: Calculate cost depending on algorithm, cost and depth should be different!
-        child_board.cost += 1  # todo check that this is right
+        child_board.cost += 1
         child_board.depth += 1
         child_board.parent = self
         return child_board

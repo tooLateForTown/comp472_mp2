@@ -1,0 +1,5 @@
+1 1 0 B..CCCB.....AA....EEEDFF...DGG...D..
+2 2 0 B..CCCB......AA...EEEDFF...DGG...D..
+2 2 0 B..CCCB.......AA..EEEDFF...DGG...D..
+2 2 0 B..CCCB........AA.EEEDFF...DGG...D..
+2 2 0 B..CCCB.........AAEEEDFF...DGG...D..

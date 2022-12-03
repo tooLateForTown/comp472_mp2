@@ -1,0 +1,6 @@
+3 1 2 .BBB....DD..AAEE..FF..CG....CG....C.
+2 2 0 .BBB....DD..AA....FF..CG....CG....C.
+3 3 0 .BBB....DD...AA...FF..CG....CG....C.
+3 3 0 .BBB....DD....AA..FF..CG....CG....C.
+3 3 0 .BBB....DD.....AA.FF..CG....CG....C.
+3 3 0 .BBB....DD......AAFF..CG....CG....C.

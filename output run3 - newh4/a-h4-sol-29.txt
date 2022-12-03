@@ -1,0 +1,26 @@
+Initial board configuration: BC.DDDBC.EEEBCAA.FGGHHHF.IJJJ..IKKK. E1 F19 H7
+
+BC.DDD
+BC.EEE
+BCAA.F
+GGHHHF
+.IJJJ.
+.IKKK.
+
+Car fuel available: A:100, B:100, C:100, D:100, E:1, F:19, G:100, H:7, I:100, J:100, K:100 
+
+Runtime: 0.01 seconds
+Search path length: 9 states
+Solution path length: 2 moves
+Solution path: F down 1; A right 2
+
+F  down 1     18 BC.DDDBC.EEEBCAA..GGHHHF.IJJJF.IKKK.
+A right 2     98 BC.DDDBC.EEEBC..AAGGHHHF.IJJJF.IKKK.
+
+BC.DDD
+BC.EEE
+BC..AA
+GGHHHF
+.IJJJF
+.IKKK.
+

@@ -130,7 +130,8 @@ class Solver:
                     c.h = c.number_of_blocking_vehicles() * self.lambda_val
                 elif self.heuristic == HEURISTIC.H4_CUSTOM:
                     # c.h = c.manhattan_distance()
-                    c.h = c.number_of_blocked_positions_in_area_to_right_of_ambulance_edge()
+                    # c.h = c.number_of_blocked_positions_in_area_to_right_of_ambulance_edge()
+                    c.h = c.h4_modified_blocked_vehicles()
 
                 self.open.add(c)
         self.open.sort_by_heuristic(self.heuristic, self.algorithm, self.lambda_val)

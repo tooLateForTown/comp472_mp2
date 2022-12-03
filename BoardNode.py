@@ -286,11 +286,6 @@ class BoardNode:
         for x in range(ambulance_right_position + 1, 6):
             if self.getYX(2, x) != '.':
                 found_vehicles.add(self.getYX(2, x))
-            # if self.board[2][x] != '.':
-            #     found_vehicles.add(self.board[2][x])
-        # print(found_vehicles)
-        # if found_vehicles == {'L','K'}:
-        #     self.show_board(True)
         return len(found_vehicles)
 
     def number_of_blocked_positions(self):
@@ -317,6 +312,35 @@ class BoardNode:
                 # if self.board[y][x] != '.':
                     count += 1
         return count
+
+
+    def h4_modified_blocked_vehicles(self):
+        # algo:
+        # 1 for ambulance movement
+        # 1 for each vertical vehicle in the way
+        # +1 if any of the vehicles is itself blocked vertically (only added once)
+        # +infinity if a horizontal vehicle in the way
+
+        h = 0
+        amb = self.get_vehicle('A')
+        # returns the number of vehicles that are blocking the ambulance
+        ambulance_right_position = self.get_vehicle('A').get_right()
+        found_vehicles = set()
+        one_cannot_move = False
+        for x in range(ambulance_right_position + 1, 6):
+            if self.getYX(2, x) != '.':
+                blocking_vehicle = self.get_vehicle(self.getYX(2, x))
+                if blocking_vehicle.horizontal:
+                    h += 10000000  #todo make inifinoty
+                else:
+                    h += 1
+                    if not one_cannot_move and self.number_free_spaces(blocking_vehicle.x, blocking_vehicle.y, DIRECTION.up) == 0 and self.number_free_spaces(blocking_vehicle.x, blocking_vehicle.get_bottom(), DIRECTION.down) == 0:
+                        one_cannot_move = True
+        if one_cannot_move:
+            h += 1
+        return h
+
+
 
     def car_fuel_for_output(self):
         s = ""

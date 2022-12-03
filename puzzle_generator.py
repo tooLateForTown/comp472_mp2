@@ -19,7 +19,7 @@ def generate_random_parking_lot(grid):
         for j in range(6):
             if grid[i][j] == 0:
                 random_token = random.randint(0, 35)
-                if random_token < 12:
+                if random_token < 13:
                     grid[i][j] = '.'
                 else:
                     car_length = random.randint(2, 3)

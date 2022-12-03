@@ -1,0 +1,4 @@
+1 1 0 .BBBC...DDC..AA...E..F..E..F.....F..
+1 1 0 .BBBC...DDC...AA..E..F..E..F.....F..
+1 1 0 .BBBC...DDC....AA.E..F..E..F.....F..
+1 1 0 .BBBC...DDC.....AAE..F..E..F.....F..

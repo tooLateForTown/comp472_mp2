@@ -1,0 +1,6 @@
+3 1 2 .BBB....CCC..DAA.E.D.FFE.....E...GGG
+3 1 2 .BBB...CCC...DAA.E.D.FFE.....E...GGG
+3 1 2 .BBB..CCC....DAA.E.D.FFE.....E...GGG
+3 1 2 .BBB.....CCC.DAA.E.D.FFE.....E..GGG.
+3 2 1 .BBB.....CCC.DAA...D.FFE.....E..GGGE
+3 3 0 .BBB.....CCC.D..AA.D.FFE.....E..GGGE

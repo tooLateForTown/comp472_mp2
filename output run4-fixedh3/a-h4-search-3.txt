@@ -1,0 +1,5 @@
+inf 1 inf .BBC.....CDD.AAEEEFGGHH.FII......JJJ
+inf 1 inf BB.C.....CDDAA.EEEFGGHH.FII......JJJ
+inf 1 inf .BBC.....CDDAAEEE.FGGHH.FII......JJJ
+3 2 1 .BBC.....CDDAA....FGGHH.FII......JJJ
+3 3 0 .BBC.....CDD....AAFGGHH.FII......JJJ

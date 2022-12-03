@@ -17,7 +17,7 @@ class Solver:
         self.search_path = []
         self.run_time = 0
         self.heuristic = heuristic
-        self.lambda_val = 5
+        self.lambda_val = lambda_val
         self.algorithm = algorithm
         self.verbose = verbose
         self.puzzle_id = puzzle_id
@@ -102,27 +102,30 @@ class Solver:
         children = board.get_successor_boards()
         for c in children:
             add_to_open = True
-            # print(f"{c.move_string} : {c.config_string}")
-            duplicate_in_open = self.open.get_board(c.board)
-            # UCS specific check
-            if duplicate_in_open is not None:
-                if duplicate_in_open.cost <= c.cost:
-                    add_to_open = False
-                else:
-                    self.open.remove_board(duplicate_in_open)
-            duplicate_in_closed = self.closed.get_board(c.board)  # todo decide if we also care about cost when doing this (see video 6 22:40).  May need to move from closed to open for A*
-            if duplicate_in_closed is not None and duplicate_in_closed.cost > c.cost and self.algorithm == ALGORITHM.A:
-                print(" ----->  SPECIAL CASE: CLOSED BOARD has lower F-Value that successor!   <----------- ")
-
-            # probably don't want config_string for comparuiosn
-            # need to check if the board found has a lower cost (for a*)
-            # but doesn't the gas make them not equivalent???
+            # Check in CLOSED queue
+            duplicate_in_closed = self.closed.get_board(c.board)
             if duplicate_in_closed is not None:
+                # duplicate found in Closed.
                 add_to_open = False
+                if self.algorithm == ALGORITHM.A:
+                    if duplicate_in_closed.getF() > c.getF():
+                        # special case!
+                        print("Special case for A*:  Closed had higher cost") # todo remove this
+                        self.closed.remove_board(duplicate_in_closed)
+                        add_to_open = True
+            # Check in OPEN queue
+            duplicate_in_open = self.open.get_board(c.board)
+            if duplicate_in_open is not None:
+                add_to_open = False
+                if self.algorithm == ALGORITHM.A:
+                    if duplicate_in_open.getF() > c.getF():
+                        self.open.remove_board(duplicate_in_open)
+                        print("Special case for A*:  Open had higher cost") # todo remove this
+                        add_to_open = True
             if add_to_open:
                 if self.heuristic == HEURISTIC.H0_PURELY_COST_FOR_UCS:
                     c.h = 0
-                elif self.heuristic == HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES or self.heuristic == HEURISTIC.H3_H1_TIMES_LAMBDA:
+                elif self.heuristic == HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES:
                     c.h = c.number_of_blocking_vehicles()
                 elif self.heuristic == HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS:
                     c.h = c.number_of_blocked_positions()

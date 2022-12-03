@@ -88,6 +88,6 @@ def generate_puzzles_file(qty=50):
         grid = [[0 for x in range(6)] for y in range(6)]
         puzzle_string = generate_random_parking_lot(grid)
         # Write puzzle to file
-        print(puzzle_string)
+        # print(puzzle_string)
         with open(file_name_with_path, 'a') as f:
             f.write(puzzle_string + '\n')

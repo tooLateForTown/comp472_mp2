@@ -28,6 +28,9 @@ class BoardNode:
     def getYX(self, y, x):
         return self.board[y * 6 + x]
 
+    def getF(self):
+        return self.h + self.cost
+
     def setYX(self, y, x, c):
         self.board = self.board[:y*6+x] + c + self.board[y*6+x+1:]
 

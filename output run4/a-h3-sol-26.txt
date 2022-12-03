@@ -10,7 +10,7 @@ JJJH..
 Car fuel available: A:100, B:11, C:3, D:100, E:100, F:7, G:100, H:14, I:100, J:100 
 
 Runtime: 0.00 seconds
-Search path length: 7 states
+Search path length: 3 states
 Solution path length: 2 moves
 Solution path: F up 1; A right 1
 

@@ -9,7 +9,7 @@ FG....
 
 Car fuel available: A:100, B:100, C:15, D:10, E:17, F:100, G:100 
 
-Runtime: 0.65 seconds
+Runtime: 0.66 seconds
 Search path length: 247 states
 Solution path length: 3 moves
 Solution path: D down 2; E down 2; A right 4

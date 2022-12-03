@@ -9,8 +9,8 @@ DAAE..
 
 Car fuel available: A:100, B:100, C:8, D:100, E:100, F:4, G:100, H:100 
 
-Runtime: 0.12 seconds
-Search path length: 65 states
+Runtime: 0.01 seconds
+Search path length: 6 states
 Solution path length: 3 moves
 Solution path: C right 1; E up 1; A right 3
 

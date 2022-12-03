@@ -9,8 +9,8 @@ HG....
 
 Car fuel available: A:100, B:100, C:17, D:14, E:100, F:7, G:100, H:100, I:100, J:100 
 
-Runtime: 0.02 seconds
-Search path length: 13 states
+Runtime: 0.00 seconds
+Search path length: 3 states
 Solution path length: 2 moves
 Solution path: F down 2; A right 1
 

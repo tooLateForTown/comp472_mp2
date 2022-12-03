@@ -9,7 +9,7 @@ B...CD
 
 Car fuel available: A:100, B:100, C:9, D:100, E:100, F:100, G:100, H:100, I:100 
 
-Runtime: 3.91 seconds
+Runtime: 3.92 seconds
 Search path length: 617 states
 Solution path length: 8 moves
 Solution path: D up 1; E up 2; A left 1; G up 3; H left 2; I left 2; C down 3; A right 4

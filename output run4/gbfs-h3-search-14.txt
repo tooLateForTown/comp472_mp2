@@ -1,5 +1,5 @@
-3 1 2 ..BB..DEE...DAAF.GD..FCG.HHFC.....C.
-3 2 1 ..BB..DEE...DAA..GD..FCG.HHFC....FC.
+11 1 10 ..BB..DEE...DAAF.GD..FCG.HHFC.....C.
+7 2 5 ..BB..DEE...DAA..GD..FCG.HHFC....FC.
 3 3 0 ..BB.GDEE..GDAA...D..FC..HHFC....FC.
 3 3 0 ..BB..DEE...DAA...D..FCG.HHFCG...FC.
 3 3 0 ..BB..DEE...DAA...D..FC..HHFCG...FCG

@@ -9,8 +9,8 @@ AACF..
 
 Car fuel available: A:100, B:100, C:5, D:3, E:100, F:100, G:100, H:19, I:100 
 
-Runtime: 0.05 seconds
-Search path length: 22 states
+Runtime: 0.02 seconds
+Search path length: 7 states
 Solution path length: 3 moves
 Solution path: C down 3; F down 1; A right 4
 

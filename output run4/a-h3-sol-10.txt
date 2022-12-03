@@ -9,8 +9,8 @@ DHHG..
 
 Car fuel available: A:100, B:100, C:100, D:100, E:100, F:100, G:100, H:100 
 
-Runtime: 0.08 seconds
-Search path length: 54 states
+Runtime: 0.06 seconds
+Search path length: 46 states
 Solution path length: 7 moves
 Solution path: C right 1; B right 2; E up 2; A left 1; F left 1; F right 1; A right 3
 

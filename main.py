@@ -17,18 +17,18 @@ vehicles = []
 
 
 # ***********************
-RUN_ALL = True
+RUN_ALL = False
 LAMBDA = 5
 VERBOSE = False
 GENERATE_PUZZLES_FILE = True
-QUANTITY_PUZZLES_TO_GENERATE = 50
+QUANTITY_PUZZLES_TO_GENERATE = 200
 # or individually if RUN_ALL = False
 RUN_UCS = False
 RUN_GBFS_H1 = False
 RUN_GBFS_H2 = False
 RUN_GBFS_H3 = False
 RUN_GBFS_H4 = False
-RUN_A_H1 = False
+RUN_A_H1 = True
 RUN_A_H2 = False
 RUN_A_H3 = False
 RUN_A_H4 = False
@@ -76,6 +76,14 @@ def main():
         f.write(globals.analysis_csv)
 
     print(f'\nTotal Runtime: {"{:.2f}".format(run_time)} seconds')
+
+    print(f"Monotonic H1 Violated = {globals.monotonic_h1_violated}")
+    print(f"Monotonic H2 Violated = {globals.monotonic_h2_violated}")
+    print(f"Monotonic H3 Violated = {globals.monotonic_h3_violated}")
+    print(f"Monotonic H4 Violated = {globals.monotonic_h4_violated}")
+
+
+
     print("\n*** The End! *** ")
 
 

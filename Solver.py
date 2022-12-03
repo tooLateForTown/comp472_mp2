@@ -110,7 +110,6 @@ class Solver:
                 if self.algorithm == ALGORITHM.A:
                     if duplicate_in_closed.getF() > c.getF():
                         # special case!
-                        print("Special case for A*:  Closed had higher cost") # todo remove this
                         self.closed.remove_board(duplicate_in_closed)
                         add_to_open = True
             # Check in OPEN queue
@@ -120,21 +119,35 @@ class Solver:
                 if self.algorithm == ALGORITHM.A:
                     if duplicate_in_open.getF() > c.getF():
                         self.open.remove_board(duplicate_in_open)
-                        print("Special case for A*:  Open had higher cost") # todo remove this
                         add_to_open = True
             if add_to_open:
                 if self.heuristic == HEURISTIC.H0_PURELY_COST_FOR_UCS:
                     c.h = 0
                 elif self.heuristic == HEURISTIC.H1_NUMBER_BLOCKING_VEHICLES:
                     c.h = c.number_of_blocking_vehicles()
+                    if self.algorithm == ALGORITHM.A:
+                        if board.h - c.h > c.cost - board.cost:
+                            globals.monotonic_h1_violated = True
                 elif self.heuristic == HEURISTIC.H2_NUMBER_BLOCKED_POSITIONS:
                     c.h = c.number_of_blocked_positions()
+                    if self.algorithm == ALGORITHM.A:
+                        if board.h - c.h > c.cost - board.cost:
+                            globals.monotonic_h2_violated = True
                 elif self.heuristic == HEURISTIC.H3_H1_TIMES_LAMBDA:
                     c.h = c.number_of_blocking_vehicles() * self.lambda_val
+                    if self.algorithm == ALGORITHM.A:
+                        if board.h - c.h > c.cost - board.cost:
+                            globals.monotonic_h3_violated = True
                 elif self.heuristic == HEURISTIC.H4_CUSTOM:
                     # c.h = c.manhattan_distance()
                     # c.h = c.number_of_blocked_positions_in_area_to_right_of_ambulance_edge()
                     c.h = c.h4_modified_blocked_vehicles()
+                    if self.algorithm == ALGORITHM.A:
+                        if board.h - c.h > c.cost - board.cost:
+                            globals.monotonic_h4_violated = True
+
+
+
 
                 self.open.add(c)
         self.open.sort_by_heuristic(self.heuristic, self.algorithm, self.lambda_val)

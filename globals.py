@@ -7,6 +7,12 @@ OUTPUT_FOLDER = "output"
 
 analysis_csv = ""
 
+monotonic_h1_violated = False
+monotonic_h2_violated = False
+monotonic_h3_violated = False
+monotonic_h4_violated = False
+
+
 
 class DIRECTION(Enum):
     up = 1

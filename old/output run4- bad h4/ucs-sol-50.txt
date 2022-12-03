@@ -1,0 +1,25 @@
+Initial board configuration: BBCDDD..C.....CAA...EEE....FF...GGG. C11 E8 F7 G12
+
+BBCDDD
+..C...
+..CAA.
+..EEE.
+...FF.
+..GGG.
+
+Car fuel available: A:100, B:100, C:11, D:100, E:8, F:7, G:12 
+
+Runtime: 0.00 seconds
+Search path length: 2 states
+Solution path length: 1 moves
+Solution path: A right 1
+
+A right 1     99 BBCDDD..C.....C.AA..EEE....FF...GGG.
+
+BBCDDD
+..C...
+..C.AA
+..EEE.
+...FF.
+..GGG.
+

@@ -64,7 +64,6 @@ def generate_random_parking_lot(grid):
         for j in range(6):
             puzzle_string += grid[i][j]
     
-    #AAB...C.BHHHC.RRDD......EEGGGF.....F C3 B4 H1
     cars_on_board = []
     for i in range(36):
         if puzzle_string[i] != '.' and puzzle_string[i] != 'A':

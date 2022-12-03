@@ -1,0 +1,3 @@
+3 1 2 BBB.C....EC.AA.E..FGDE..FGD....G....
+3 2 1 BBB.C.....C.AA....FGDE..FGDE...G.E..
+3 3 0 BBB.C.....C.....AAFGDE..FGDE...G.E..

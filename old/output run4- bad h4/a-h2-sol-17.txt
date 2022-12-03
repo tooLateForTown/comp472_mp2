@@ -1,0 +1,25 @@
+Initial board configuration: BBCC...D.....DEAA..DE..FGGE..F...... D2 G17
+
+BBCC..
+.D....
+.DEAA.
+.DE..F
+GGE..F
+......
+
+Car fuel available: A:100, B:100, C:100, D:2, E:100, F:100, G:17 
+
+Runtime: 0.00 seconds
+Search path length: 2 states
+Solution path length: 1 moves
+Solution path: A right 1
+
+A right 1     99 BBCC...D.....DE.AA.DE..FGGE..F......
+
+BBCC..
+.D....
+.DE.AA
+.DE..F
+GGE..F
+......
+

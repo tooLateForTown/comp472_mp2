@@ -7,8 +7,6 @@ class BoardQueue:
     def __init__(self):
         self.nodes = []   # of type BoardNode
 
-    # def sort_by_cost(self):  # for UCS
-    #     self.nodes.sort(key=lambda x: x.cost)
 
     def get_board(self, board_string):
         # returns board if found.

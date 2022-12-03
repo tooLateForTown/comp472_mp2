@@ -1,4 +1,3 @@
-#todo add names and id's
 import numpy as np
 from BoardNode import BoardNode
 from datetime import datetime
@@ -12,16 +11,14 @@ import puzzle_generator
 board = np.full((6, 6), '.')
 vehicles = []
 
-# BBIJ....IJCC..IAAMGDDK.MGH.KL.GHFFL.
-# BBB..MCCDD.MAAKL.MJ.KLEEJ.GG..JHHHII B4 J0
 
 
 # ***********************
-RUN_ALL = False
+RUN_ALL = True
 LAMBDA = 5
 VERBOSE = False
 GENERATE_PUZZLES_FILE = True
-QUANTITY_PUZZLES_TO_GENERATE = 200
+QUANTITY_PUZZLES_TO_GENERATE = 50
 # or individually if RUN_ALL = False
 RUN_UCS = False
 RUN_GBFS_H1 = False

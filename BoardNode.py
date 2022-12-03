@@ -168,25 +168,21 @@ class BoardNode:
         if direction == DIRECTION.up:
             y -= 1
             while y >= 0 and self.getYX(y, x) == '.':
-            # while y >= 0 and self.board[y][x] == '.':
                 count += 1
                 y -= 1
         if direction == DIRECTION.down:
             y += 1
             while y <= 5 and self.getYX(y, x) == '.':
-            # while y <= 5 and self.board[y][x] == '.':
                 count += 1
                 y += 1
         if direction == DIRECTION.right:
             x += 1
             while x <= 5 and self.getYX(y, x) == '.':
-            # while x <= 5 and self.board[y][x] == '.':
                 count += 1
                 x += 1
         if direction == DIRECTION.left:
             x -= 1
             while x >= 0 and self.getYX(y, x) == '.':
-            # while x >= 0 and self.board[y][x] == '.':
                 count += 1
                 x -= 1
 
@@ -194,7 +190,6 @@ class BoardNode:
 
     def get_successor_boards(self):  # SUCCESSOR FUNCTION
         children = []
-        # print("Searching for all valid moves....")
         for v in self.vehicles:
             if v.horizontal:
                 for i in range(0, self.number_free_spaces(v.x + v.length - 1, v.y, DIRECTION.right)):
@@ -218,7 +213,7 @@ class BoardNode:
 
     def single_move_result(self, vehicle, direction, distance):
         child_board = copy.deepcopy(
-            self)  # todo consider throwing away vechicles before deep-cloning to avoid filling memory
+            self)
         child_board.vehicle_moved = vehicle.letter
         child_board.vehicle_direction = direction
         child_board.vehicle_distance = distance
@@ -246,7 +241,6 @@ class BoardNode:
         # add child-specific values
         child_board.move_string = f"{vehicle.letter} {direction.name} {distance}"
         child_board.config_string = child_board.board_config_string()  # only calculate config string once
-        # TODO: Calculate cost depending on algorithm, cost and depth should be different!
         child_board.cost += 1
         child_board.depth += 1
         child_board.parent = self
@@ -258,11 +252,9 @@ class BoardNode:
             if v.horizontal:
                 for i in range(0, v.length):
                     self.setYX(v.y, v.x + i, v.letter)
-                    # self.board[v.y][v.x + i] = v.letter
             if not v.horizontal:
                 for i in range(0, v.length):
                     self.setYX(v.y+i, v.x, v.letter)
-                    # self.board[v.y + i][v.x] = v.letter
 
     @staticmethod
     def path_to_parent(end_board):
@@ -298,7 +290,6 @@ class BoardNode:
         amb = self.get_vehicle('A')
         for x in range(amb.get_right() + 1, 6):
             if self.getYX(2, x) != '.':
-            # if self.board[2][x] != '.':
                 count += 1
         return count
 
@@ -313,7 +304,6 @@ class BoardNode:
         for y in range(0, 6):
             for x in range(amb.get_right() + 1, 6):
                 if self.getYX(y, x) != '.':
-                # if self.board[y][x] != '.':
                     count += 1
         return count
 
@@ -322,8 +312,9 @@ class BoardNode:
         # algo:
         # +1 for ambulance movement is not touching goal
         # 1 for each vertical vehicle in the way
+        # 1 for every horizontal vehicle not touching exit
         # +1 if any of the vehicles is itself blocked vertically (only added once)
-        # +infinity if a horizontal vehicle in the way
+        #
 
         h = 0
         amb = self.get_vehicle('A')
@@ -331,15 +322,19 @@ class BoardNode:
         if ambulance_right_position < 5:
             h += 1  # for ambulance movement
         one_cannot_move = False
+        found_vehicles = set()
         for x in range(ambulance_right_position + 1, 6):
             if self.getYX(2, x) != '.':
-                blocking_vehicle = self.get_vehicle(self.getYX(2, x))
-                if blocking_vehicle.horizontal:
-                    h += math.inf
-                else:
+                found_vehicles.add(self.getYX(2, x))
+        for v_letter in found_vehicles:
+            h += 1
+            v = self.get_vehicle(v_letter)
+            if v.horizontal:
+                if v.get_right() < 5:
                     h += 1
-                    if not one_cannot_move and self.number_free_spaces(blocking_vehicle.x, blocking_vehicle.y, DIRECTION.up) == 0 and self.number_free_spaces(blocking_vehicle.x, blocking_vehicle.get_bottom(), DIRECTION.down) == 0:
-                        one_cannot_move = True
+            if not v.horizontal:
+                if self.number_free_spaces(v.x, v.y, DIRECTION.up) == 0 and self.number_free_spaces(v.x, v.get_bottom(), DIRECTION.down) == 0:
+                    one_cannot_move = True
         if one_cannot_move:
             h += 1
         return h

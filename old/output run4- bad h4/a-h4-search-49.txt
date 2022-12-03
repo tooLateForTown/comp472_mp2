@@ -1,0 +1,4 @@
+2 1 1 B.CCCEBD...EBD.AA.FDGH..F.GH.....H..
+2 1 1 B.CCC.BD....BD.AA.FDGH.EF.GH.E...H..
+2 1 1 B.CCC.BD....BD.AA.FDGH..F.GH.E...H.E
+2 2 0 B.CCCEBD...EBD..AAFDGH..F.GH.....H..
